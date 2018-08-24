@@ -1,0 +1,174 @@
+﻿<!--<link href="../../css/loginStyleSheet.css" rel="stylesheet" />-->
+
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="limiter" ng-controller="RegisterCtrl as regCtrl">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="dropdown language-dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                        <!--<img src="../../images/flag.png" />-->ENGLISH
+                        <!--<span class="caret"></span>-->
+                    </button>
+                    <!--<ul class="dropdown-menu">
+                            <li><a href="#"><img src="../../images/flag.png" />ENG</a></li>
+                            <li><a href="#"><img src="../../images/flag.png" />ENG</a></li>
+
+                    </ul>-->
+                </div>
+                <!--<form class="login100-form register-form" name="regCtrl.regForm"> ng-show="regForm.$submitted && regForm.EmployeeID.$error.required"-->
+                <form class="login100-form register-form" id="regForm" name="regForm" method="post" ng-submit="regCtrl.registerEmp(regForm.$valid)" novalidate>
+                    <!--<div class="form-actions">
+                        <span class="error" ng-show="regForm.username.$error.required">
+                            Required!
+                        </span>
+                        <div class="input-group">
+                            <input type="text" ng-model="user2.username" name="username" ng-pattern="example.word" placeholder="User Name" required>
+                        </div>
+                    </div>-->
+
+
+                    <span class="login_logo_w"><img src="../../images/logo.png" /></span>
+                    <span class="login100-form-title p-b-26">
+                        REGISTER ACCOUNT
+                    </span>
+
+                    <div style="margin:-10px 0 10px 50px;">
+                        <span style="color:red;">{{alertMessage}}</span>
+                    </div>
+
+                    <!--Design Edit-->
+                    <div class="inputGroupContainer">
+                        <div class="wrap-input100 validate-input input-group">
+
+                            <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                            <input class="input100" type="text" name="EmployeeID" ng-model="regCtrl.empid" placeholder="{{Labelctrl.LabelText.PHEmployeeID}}" required>
+                        </div>
+                        <!--<span class="help-block" style="color:red" ng-show="regCtrl.empSender">-->
+                        <!--ng-show="regForm.EmployeeID.$error.required"-->
+                        <span id="spanEmpId" class="help-block" style="color:red" ng-show="regForm.EmployeeID.$error.required" ng-if="regForm.$submitted">
+                            EmployeeId is required.
+                        </span>
+                    </div>
+                    <!--End Design Edit-->
+
+                    <div class="inputGroupContainer">
+                        <div class="wrap-input100 validate-input input-group">
+                            <span class="input-group-addon"><i class="fa fa-id-card-o" aria-hidden="true"></i></span>
+                            <input class="input100" type="text" name="GovtId" ng-change="myTracks()" ng-model="regCtrl.govtid" placeholder="{{Labelctrl.LabelText.PHGovtId}}" ng-required="true">
+                        </div>
+                        <!--<span class="help-block" style="color:red" ng-show="regCtrl.govtSender">GovtId is Required</span>-->
+                        <span id="spanGovtId" class="help-block" style="color:red" ng-show="regForm.GovtId.$error.required" ng-if="regForm.$submitted">GovtId is Required</span>
+                    </div>
+
+                    <!--<div ng-show="regCtrl.Sender">
+                        <span class="err">Please Enter Govt ID</span>
+                    </div>-->
+
+
+                    <div class="inputGroupContainer">
+                        <div class="wrap-input100 validate-input input-group">
+                            <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>  
+                            <input autocomplete="off" ysec-datepiker ng-model="dob" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" class="PPP input100" date-format="dd-MMM-yyyy"
+                                   past-date-disable="false" upcoming-date-disable="true" ng-change="myTracks()" dob-option="dob:2000" name="dateofbirth" style="cursor:pointer;" required />
+                        </div>
+                        <span id="spanDob" class="help-block" style="color:red" ng-show="regForm.dateofbirth.$error.required" ng-if="regForm.$submitted">DOB is required</span>
+                    </div>
+
+                    <div class="inputGroupContainer">
+                        <div class="wrap-input100 validate-input input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                            <input class="input100" type="text" name="email" ng-model="regCtrl.email" placeholder="{{Labelctrl.LabelText.PHEmail}}" id="txtEmail" ng-change="clearEmailspanmsg()">
+                        </div>
+                        <span class="help-block" id="spanEmail" style="color:red"></span>  <!--ng-show="regForm.email.$dirty" ng-if="regForm.$submitted"-->
+                    </div>
+                    <div style="visibility:hidden">1</div>
+                    <div class="inputGroupContainer">
+                        <div class="wrap-input100 validate-input input-group">
+                            <span class="input-group-addon"><i class="fa fa-mobile" aria-hidden="true"></i></span>
+                            <input class="input100" type="number" name="mobilenumber" ng-model="regCtrl.mobileno" pattern="\d*" onKeyPress="if(this.value.length==10) return false;"
+                                   placeholder="{{Labelctrl.LabelText.PHMobile}}" required> <!--ng-change="myTracks()"  pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;"-->
+                        </div>
+                        <!--<span class="help-block" style="color:red" ng-show="regCtrl.mobSender">MobileNumber is required</span>-->
+                        <span id="spanMobile" class="help-block" style="color:red" ng-show="regForm.mobilenumber.$error.required" ng-if="regForm.$submitted">MobileNumber is required</span>
+                    </div>
+
+                    <div class="inputGroupContainer">
+                        <div class="wrap-input100 validate-input input-group">
+                            <span class="input-group-addon"><i class="fa fa-building" aria-hidden="true"></i></span>
+                            <div>
+                                <select class="form-control" ng-model="regCtrl.regCountry" style="color: #e9e9e9" ng-change="myTracks()" name="country" required>
+                                    <option value="" selected disabled>{{Labelctrl.LabelText.PHCountry}}</option>
+                                    <option ng-repeat="countryList in regCtrl.countryList" value={{countryList.countryId}}>{{countryList.countryName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--<span class="help-block" style="color:red" ng-show="regCtrl.countrySender">Please Select Country</span>-->
+                        <span id="spanCountry" class="help-block" style="color:red" ng-show="regForm.country.$error.required" ng-if="regForm.$submitted">Please Select Country</span>
+                    </div>
+
+                    <div class="inputGroupContainer">
+                        <div class="wrap-input100 validate-input input-group">
+                            <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                            <input class="input100" type="text" name="UserName" ng-model="regCtrl.username" ng-change="myTracks()" placeholder="{{Labelctrl.LabelText.PHRegUserName}}" required>
+                        </div>
+                        <!--<span class="help-block" style="color:red" ng-show="regCtrl.usernameSender">UserName is required</span>-->
+                        <span id="spanUserName" class="help-block" style="color:red" ng-show="regForm.UserName.$error.required" ng-if="regForm.$submitted">UserName is required</span>
+                    </div>
+
+                    <div class="inputGroupContainer">
+                        <div class="wrap-input100 validate-input input-group" data-validate="Enter password">
+                            <span class="input-group-addon"><i class="fa fa-mobile" aria-hidden="true"></i></span>
+                            <span class="btn-show-pass">
+                                <i class="zmdi zmdi-eye" ng-click="regCtrl.show()"></i>
+                            </span>
+                            <input class="input100" ng-model="regCtrl.password" type="{{inputType}}" name="pass" placeholder="{{Labelctrl.LabelText.PHPassword}}" required="">
+                        </div>
+                        <!--<span class="help-block" style="color:red" ng-show="regCtrl.pwdSender">Password is required</span>-->
+                        <span id="spanPassword" class="help-block" style="color:red" ng-show="regForm.pass.$error.required" ng-if="regForm.$submitted">Password is required</span>
+                    </div>
+
+                    <div class="inputGroupContainer">
+                        <div class="wrap-input100 validate-input input-group" data-validate="Enter password">
+                            <span class="input-group-addon"><i class="fa fa-mobile" aria-hidden="true"></i></span>
+                            <!--<span class="btn-show-pass">
+                                <i class="zmdi zmdi-eye"  ng-click="regCtrl.show()"></i>
+                            </span>-->
+                            <input class="input100" type="{{inputType}}" name="Cpass" ng-model="regCtrl.confirmPassword" placeholder="{{Labelctrl.LabelText.PHConfirmPassword}}" required="">
+                        </div>
+                        <span id="spanConfirmPwd" class="help-block" style="color:red" ng-show="regForm.Cpass.$error.required" ng-if="regForm.$submitted">Confirm Password is required</span>
+                    </div>
+
+
+                    <!--<div class="wrap-input100 validate-input input-group register-refresh">-->
+                    <!--<img src="../../images/Captcha-ex.png"/>-->
+                    <!--<input readonly  minlength="4" maxlength="4"  ng-model="regCtrl.oldCapthaCode" style="background-image: url('../../images/Captcha-ex.png');  text-align: center; border: none; font-weight: bold; font-family: Modern" />
+                    <span class="input-group-addon">-->
+                    <!--<i class="fa fa-refresh" aria-hidden="true"></i>-->
+                    <!--<i class="fa fa-refresh" ng-click="regCtrl.Captcha()" aria-hidden="true"></i>
+                    </span>-->
+                    <!--<input class="input100" type="text" name="captchacode" ng-model="captcha"placeholder="Enter the Captcha Code">-->
+                    <!--<input class="input100" type="text" name="captchacode"  minlength="4" maxlength="4" ng-change="regCtrl.myCheck()" ng-model="regCtrl.NewCaptchaCode" placeholder="Enter the Captcha Code"/>
+                    </div>-->
+
+
+                    <div class="container-login100-form-btn">
+                        <div class="wrap-login100-form-btn">
+                            <!--<button class="login100-form-btn" ui-sref="private.dashboard" ng-click=  "regCtrl.registerEmp()">Register</button>-->
+                            <div>
+                                <button class="login100-form-btn" type="button" ng-click="regCtrl.Login()"> Login</button>
+
+                                <button class="login100-form-btn" type="button" ng-click="ClearText()">Clear</button>
+                                <button class="login100-form-btn" type="submit">Register</button>
+                            </div>
+                            <!--ng-click="regCtrl.registerEmp()"-->
+                            <!--<span class="pull-right" ng-click="regCtrl.Login()"><i class="fa fa-hand-o-right" style="color:deeppink"></i> Login </span>-->
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
