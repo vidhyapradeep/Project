@@ -1,0 +1,51 @@
+
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="container-fluid">
+        <div class="header">
+            <span>{{Labelctrl.LabelText.HdBenefitSummary}}</span>
+        </div>
+    </div>
+    <div class="container_w" ng-controller="BenefitSummaryCtrl as BenefitSummaryCtrl">
+
+        <!--Norecords Found Start-->
+        <div ng-show="BenefitSummaryCtrl.ShowNRImage==true" class="no-record-found">
+            <img src="../../images/NoRecord.png" />
+        </div>
+        <!--Norecords Found End-->
+
+        <div ng-show="BenefitSummaryCtrl.ShowNRImage==false">
+            <div class="inbox_content" ng-init="BenefitSummaryCtrl.GetInsuranceDetails()">
+                <div class="table-responsive">
+                    <table class="table table-bordered table_W apply_leave">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="a in vm.benefitsummaryTableTH  track by $index">
+                                    <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                    <lable>{{a.th}}</lable>-->
+                                    <lable>{{a}}</lable>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in BenefitSummaryDetails">
+                                <td>{{item.name}}</td>
+                                <td>{{item.insuranceName}}</td>
+                                <td>{{item.insuranceLevel}}</td>
+                                <td>{{item.docterName}}</td>
+                                <td class="currency-align">{{item.empAmount}}</td>
+                                <td class="currency-align">{{item.compAmount}}</td>
+                            </tr>
+                            <tr class="payslip-summary" ng-repeat="item in BenefitSummaryDetails | limitTo:1">
+                                <td colspan="3"></td>
+                                <td><strong>{{Labelctrl.LabelText.LabTotal}}</strong></td>
+                                <td class="currency-align">{{item.sumOfEmpAmount}}</td>
+                                <td class="currency-align">{{item.sumOfCompAmount}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
