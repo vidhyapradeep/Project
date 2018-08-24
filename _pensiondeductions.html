@@ -1,0 +1,71 @@
+
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="container-fluid">
+        <div class="header">
+            <span>{{Labelctrl.LabelText.HdPensionDeductions}}</span>
+        </div>
+    </div>
+    <div class="container_w" ng-controller="PensionCtrl as PensionCtrl">
+        <div>
+            <!--<span style="color:red;margin-left:30%;margin-bottom:5%;">{{alertMessage}}</span>-->
+            <span class="alert alert-danger" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+        </div>
+
+        <!--Norecords Found Start-->
+        <div ng-show="PensionCtrl.ShowNRImage==true" class="no-record-found">
+            <img src="../../images/NoRecord.png" />
+        </div>
+        <!--Norecords Found End-->
+
+        <div ng-show="PensionCtrl.ShowNRImage==false">
+            <div class="table-responsive" ng-init="PensionCtrl.GetPensionDetails()">
+                <div class="pull-right marbtn">
+                    <div class="H_search_w">
+                        <div class="containerSearch">
+                            <i class="fa fa-search"></i>
+                            <input type="search" id="search" placeholder="Search..." ng-model="q" />
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered table_W tableheader">
+                    <thead>
+                        <tr>
+                            <th colspan="7">{{Labelctrl.LabelText.HdPensionDeductions}}</th>
+                        </tr>
+                        <tr>
+                            <th ng-repeat="a in vm.pensionDesuctionsTableTH  track by $index">
+                                <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                <lable>{{a.th}}</lable>-->
+                                <lable>{{a}}</lable>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in PensionDetails | filter:q">
+
+                            <td>{{item.pensionName}}</td>
+                            <td>{{item.deductedMonth}}</td>
+                            <td class="currency-align">{{item.goalAmount}}</td>
+                            <td>{{item.employerShare}}</td>
+                            <td class="currency-align">{{item.employeeShare}}</td>
+                            <td>{{item.employerContribution}}</td>
+                            <td class="currency-align">{{item.employeeContribution}}</td>
+                        </tr>
+                        <tr class="payslip-summary" ng-repeat="item in PensionDetails | limitTo:1">
+                            <td colspan="4"></td>
+                            <td><strong>{{Labelctrl.LabelText.LabTotal}}</strong></td>
+                            <td class="currency-align">{{item.sumOfEmployerContribution}}</td>
+                            <td class="currency-align">{{item.sumOfEmployeeContribution}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
