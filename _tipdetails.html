@@ -1,0 +1,94 @@
+
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="container-fluid" ng-controller="TipDetailsCtrl as TipDetailsCtrl">
+        <div class="header">
+            <span>{{Labelctrl.LabelText.HdTipDetails}}</span>
+        </div>
+
+        <section id="tipdetails" class="container_w">
+            <div class="leave-details mar15 comp_datepicker pull-left" ng-init="TipDetailsCtrl.LoadSalaryPeriods()">
+                <form class="form-inline" id="TipForm" name="TipForm" method="post" ng-submit="TipDetailsCtrl.BtnSubmitClick(TipForm.$valid)" novalidate>
+
+                    <div>
+                        <!--<span style="color:red;margin-left:40%;margin-bottom:5%;">{{alertMessage}}</span>-->
+                        <span class="alert alert-danger" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+                    </div>
+
+                    <div class="form-group">  
+                        <span class="help-block" style="color: red;margin-top:2%;" ng-show="TipForm.SalaryPeriod.$error.required" ng-if="TipForm.$submitted">Salary Period is Required</span>
+                        <label for="filter">{{Labelctrl.LabelText.LabSelectSalaryPeriod}}<span class="red">*</span></label>
+                        <select class="form-control" ng-model="SelectedPeriod" name="SalaryPeriod" required>
+                            <option value="" selected disabled>Select</option>
+                            <option ng-repeat="item in SalaryPeriods" value="{{item.salaryPeriod}}">{{item.salaryPeriod}}  </option>
+
+                        </select>
+                        <button class="btn btn-purple" type="submit">Submit</button>
+
+
+                    </div>
+                </form>
+            </div>
+
+            <!--Norecords Found Start-->
+            <div ng-show="TipDetailsCtrl.ShowNRImage==true" class="no-record-found">
+                <img src="../../images/NoRecord.png" />
+            </div>
+            <!--Norecords Found End-->
+
+            <div ng-show="TipDetailsCtrl.ShowNRImage==false">
+                <div class="container_w padd15 pay-slip-form" ng-hide="divTip">
+                    <div class="col-xs-12 ">
+                        <nav>
+                            <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane show in active" ng-show="vm.tabView==0">
+                                <div class="sumaary-tab mar15">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table_W tableheader">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="8">Summary</th>
+                                                </tr>
+                                                <tr>
+                                                    <th ng-repeat="a in vm.summarytabTableTH  track by $index">
+                                                        <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                                        <lable>{{a.th}}</lable>-->
+                                                        <lable>{{a}}</lable>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in TipDetails | limitTo:1">
+                                                    <td>{{item.name}}</td>
+                                                    <td class="currency-align">{{item.amountPerPoint}}</td>
+                                                    <td class="currency-align">{{item.point}}</td>
+                                                    <td class="currency-align">{{item.totalAmount}} </td>
+                                                    <td class="currency-align">{{item.otPay}}</td>
+                                                    <td class="currency-align">{{item.exception}}</td>
+                                                    <td class="currency-align">{{item.newTipWithOT }} </td>
+                                                    <td class="currency-align">{{item.toPayAmount }}</td>
+                                                </tr>
+                                                <tr class="payslip-summary" ng-repeat="item in TipDetails | limitTo:1">
+                                                    <td colspan="1"></td>
+                                                    <td><strong>{{Labelctrl.LabelText.LabTotal}}</strong></td>
+                                                    <td class="currency-align">{{item.sumOfPoint}}</td>
+                                                    <td class="currency-align">{{item.sumOfTotalAmount}}</td>
+                                                    <td class="currency-align">{{item.sumOfOtPay}}</td>
+                                                    <td class="currency-align">{{item.sumOfException}}</td>
+                                                    <td class="currency-align">{{item.sumOfNewTipWithOT}}</td>
+                                                    <td class="currency-align">{{item.sumOfToPayAmount}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
