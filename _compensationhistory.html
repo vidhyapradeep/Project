@@ -1,0 +1,133 @@
+
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="container-fluid">
+        <div class="header">
+            <span>{{Labelctrl.LabelText.LabCompensationHistory}}</span>
+        </div>
+    </div>
+    <div class="container_w" ng-controller="CompnCtrl as CompnCtrl" ng-init="CompnCtrl.GetCompansationDetails()">
+        <div>
+            <!--<span style="color:red;margin-left:30%;margin-bottom:5%;">{{alertMessage}}</span>-->
+
+            <span class="alert alert-danger" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-5 col-sm-5 col-md-5 col-xs12">
+                <span class="username" ng-repeat="item in CompnasationDetails | limitTo:1">{{item.userName}} </span>
+            </div>
+            <div class="col-lg-7 col-sm-7 col-md-7 col-xs-12">
+                <form class="form-inline pull-right comp_datepicker" id="CompnasationForm" name="CompnasationForm" method="post" ng-submit="CompnCtrl.SubmitBtnClick(CompnasationForm.$valid)" novalidate>
+                    <div class="form-group">
+                        <span class="help-block" style="color: red;margin:5px 0 0 60px;" ng-show="CompnasationForm.fromDateComp.$error.required" ng-if="CompnasationForm.$submitted">From Date is required</span>
+                        <label for="filter">{{Labelctrl.LabelText.LabFromDate}}</label>
+                        <div class='input-group date'>
+                            <input autocomplete="off" ysec-datepiker class="PPP" date-format="dd-MMM-yyyy" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" past-date-disable="false" upcoming-date-disable="true" ng-model="FromDateComp" name="fromDateComp" required>
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="filter">{{Labelctrl.LabelText.LabToDate}} </label>
+                        <div class='input-group date'>
+                            <input autocomplete="off" ysec-datepiker class="PPP" date-format="dd-MMM-yyyy" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" past-date-disable="false" upcoming-date-disable="true" ng-model="ToDateComp" name="toDateComp">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <span class="help-block" style="color: red;margin:5px 0 0 60px;" ng-show="CompnasationForm.toDateComp.$error.required" ng-if="CompnasationForm.$submitted">To Date is required</span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-purple">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="jon-information">
+            <div class="sub-header">
+                {{Labelctrl.LabelText.LabEmployeeJobInformation}}
+            </div>
+            <ul class="emp-job-details">
+                <li>
+                    <label>{{Labelctrl.LabelText.LabEmployeeId}}: </label>
+                    <span ng-repeat="item in CompnasationProfileDetails | limitTo:1" ng-model="spnEmployeeId">{{item.employeeId}}</span>
+                </li>
+                <li>
+                    <label>{{Labelctrl.LabelText.LabJobTitle}}:</label>
+                    <span ng-repeat="item in CompnasationProfileDetails | limitTo:1" ng-model="spnJobTitle">{{item.jobTitle}} </span>
+                </li>
+                <li>
+                    <label>{{Labelctrl.LabelText.LabDepartment}}:</label>
+                    <span ng-repeat="item in CompnasationProfileDetails | limitTo:1" ng-model="spnDepartment">{{item.department}}</span>
+                </li>
+                <li>
+                    <label>{{Labelctrl.LabelText.LabPayrollStatus}}:</label>
+                    <span class="true" ng-repeat="item in CompnasationProfileDetails | limitTo:1" ng-model="spnPayrollStatus">{{item.payrollStatus}} </span>
+                </li>
+            </ul>
+
+        </div>
+
+        <!--Norecords Found Start-->
+        <div ng-show="CompnCtrl.ShowNRImage==true" class="no-record-found">
+            <img src="../../images/NoRecord.png" />
+        </div>
+        <!--Norecords Found End-->
+
+        <style>
+            .true {
+                font-weight: bold;
+                color: #44c765;
+            }
+
+            .false {
+                font-weight: bold;
+                color: #4D403D;
+            }
+        </style>
+
+
+        <div class="table-responsive" ng-show="CompnCtrl.ShowNRImage==false">
+            <!--ng-init="CompnCtrl.LoadUserBankAcountDetails()"-->
+
+
+
+            <div class="pull-right marbtn">
+                <div class="H_search_w">
+                    <div class="containerSearch">
+                        <i class="fa fa-search"></i>
+                        <input type="search" id="search" placeholder="Search..." ng-model="q" />
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered table_W tableheader" ng-model="tblData">
+                <thead>
+                    <tr>
+                        <th colspan="10">{{Labelctrl.LabelText.LabSalaryHistory}}</th>
+                    </tr>
+                    <tr>
+                        <th ng-repeat="a in vm.compensationTableTH  track by $index">
+                            <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                            <lable>{{a.th}}</lable>-->
+                            <lable>{{a}}</lable>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in CompnasationDetails | filter:q">
+                        <td>{{item.dateOfChange}}</td>
+                        <td>{{item.action}}</td>
+                        <td>{{item.reason}}</td>
+                        <td class="currency-align">{{item.annualSalary}}</td>
+                        <td>{{item.currencyCode}}</td>
+                        <td class="currency-align">{{item.compsationFrequency}}</td>
+                        <td>{{item.currencyCode}}</td>
+                        <td>{{item.remarks}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
