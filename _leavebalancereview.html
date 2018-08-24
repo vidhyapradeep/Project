@@ -1,0 +1,70 @@
+﻿<div ng-controller="LeaveCtrl as leaveCtrl" ng-init="leaveCtrl.loadLeaveBalanceApvScreen()">
+    <div class="container-fluid">
+        <div class="header">
+            <span>Leave Details</span>
+        </div>      
+    </div>   
+    <div class="container_w">
+        <div class="leave-details pull-left">
+        </div>
+        <div class="pull-right">
+            <div class="H_search_w">
+                <div class="containerSearch">
+                    <i class="fa fa-search"></i>
+                    <input type="search" id="search" ng-model="q" placeholder="Search..." />
+                </div>
+            </div>
+
+            <div class="show_entries">
+                <span>Show Entries</span>
+                <span class="dropdown selectBOx_w">
+                    <select ng-model="pageSize" id="pageSize" class="dropdown-menu btn btn-default  fa fa-chevron-down" aria-hidden="true">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
+
+                </span>
+            </div>
+        </div>
+
+    </div>
+    <div class="inbox_content padd15">
+        <div class="table-responsive">
+            <table class="table table-bordered table_W apply_leave">
+                <thead>
+                    <tr>
+                        <th ng-repeat="a in vm.leaveBalanceTH  track by $index">
+                            <span ng-if="a.subTh.length==0">{{a.th}}</span>
+                            <lable>{{a.th}}</lable>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in ApLeaveBalanceList | filter : q | startFrom:currentPage*pageSize | limitTo:pageSize">
+                        <td>{{item.employeeId}}</td>
+                        <td>{{item.employeeName}}</td>
+                        <td>{{item.joinDate}}</td>
+                        <td>{{item.earnedLeaves}}</td>
+                        <td>{{item.leavesTaken}}</td>
+                        <td>{{item.currentLeaveBalance}}</td>
+                        <td>{{item.holidayLeave}}</td>
+                        <td>{{item.soldHoliday}}</td>
+                        <td>{{item.soldLeave}}</td>
+                        <td>{{item.holidaysLeaveBalance}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!--<ul class="pagination pagination-sm">
+                <li><a ng-show="currentPage == 0 ? false : true" ng-click="currentPage=currentPage-1">Prev</a></li>
+                <li class="active page_count"><a>{{currentPage+1}}/{{numberOfPages()}}</a></li>
+                <li><a ng-show="currentPage >= getData().length/pageSize - 1 ? false : true" ng-click="currentPage=currentPage+1">Next<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+            </ul>-->       
+        </div>
+    </div>
+
+</div>
+
+
