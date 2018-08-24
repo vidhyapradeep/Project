@@ -1,0 +1,337 @@
+﻿<div ng-controller="LabelCtrl as Labelctrl">
+
+    <div class="container-fluid">
+
+        <div class="header">
+            <span>{{Labelctrl.LabelText.LabApplyLeave}}</span>
+        </div>
+
+        <!--<div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+            <div class="header">
+                <span>Leave Balance</span>
+            </div>
+        </div>-->
+    </div>
+
+    <div class="container_w" ng-controller="LeaveCtrl as leaveCtrl" ng-init="leaveCtrl.loadLeaveBalance();">
+        <!--<form class="form-inline apply-leave">-->
+
+        <form class="leave-appliction" id="leaveForm" name="leaveForm" method="post" ng-submit="leaveCtrl.ApplyLeaves(leaveForm.$valid)" novalidate>
+
+            <div class="form-group ">
+
+                <!--<div class="form-group form-inline" ng-repeat="item in leaveCtrl.LeaveBalanceList | limitTo:1">
+                    <label for="filter">Current Leave Balance </label>
+                    <input type="text" class="form-control" value="{{item.currentLeaveBalance}}" readonly />
+                </div>-->
+
+                <div class="row col-lg-12 co-sm-12 col-md-12 col-xs-12 ">
+                    <div class="alert alert-success-balance" style="width:29%;">
+                        <h4 style="margin-bottom:0;padding-bottom:0;text-align:center;">{{Labelctrl.LabelText.LabCurrentLeaveBalance}} : <span ng-repeat="item in leaveCtrl.LeaveBalanceList | limitTo:1"><strong>{{item.currentLeaveBalance}}</strong></span></h4>
+                    </div>
+                </div>
+
+                <!--<div style="margin:-10px 0 10px 100px;">
+                    <span style="color:red;margin-left: 2%">{{alertMessage}}</span>
+                </div>
+                <div style="margin:-10px 0 10px 100px;">
+                    <span style="color:green;">{{alertMessageForLeaveApply}}</span>
+                </div>-->
+                <span class="alert alert-danger" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+
+
+                <span class="alert alert-success" ng-if="alertMessageForLeaveApply.replace(' ','').length > 0">{{alertMessageForLeaveApply}}</span>
+
+                <div class="form-group form-inline">
+                    <label for="filter">{{Labelctrl.LabelText.LabLeaveType}}<span class="star">*</span></label>
+                    <select class="form-control" data-ng-model="leaveType" id="leaveType" name="leaveType" ng-change="leaveCtrl.ClearAlert()" required>
+                        <option style="display:none">
+                        <option ng-repeat="leaveTypeList in  leaveCtrl.LeaveTypeList" value="{{leaveTypeList.leaveTypeId}}" ng-selected="leaveTypeList.value == leaveType">{{leaveTypeList.leaveDescription}}</option>
+                    </select>
+                    <span id="spanLeaveType" class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="leaveForm.leaveType.$error.required " ng-if="leaveForm.$submitted">Leave Type is required</span>
+                    <!--<button type="submit" class="btn  btn-purple" ng-click="vm.LeaveBalancefn()" style="margin-left:10px;">Leave Balance</button>-->
+                    <input type="text" name="LeaveId" ng-model="LeaveId" style="display:none" />
+                </div>
+
+                <div class="form-group form-inline">
+
+                    <label for="filter">{{Labelctrl.LabelText.LabFromDate}}<span class="star">*</span></label>
+
+                    <div class='input-group date'>
+                        <input autocomplete="off" ysec-datepiker ng-model="fromDate" class="PPP" name="fromDate" date-format="dd-MMM-yyyy" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" past-date-disable="true" upcoming-date-disable="false" ng-change="leaveCtrl.noOfDays()" required>
+                        <span class="input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <span id="spanFromDate" class="help-block" style="color:red;margin-left:8%;margin-top:0.5%;" ng-show="leaveForm.fromDate.$error.required" ng-if="leaveForm.$submitted">From Date is required</span>
+                </div>
+
+                <div class="form-group form-inline">
+                    <label for="filter">{{Labelctrl.LabelText.LabToDate}} <span class="star">*</span></label>
+                    <div class='input-group date'>
+                        <input autocomplete="off" ysec-datepiker ng-model="toDate" class="PPP" name="toDate" date-format="dd-MMM-yyyy" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" past-date-disable="true" upcoming-date-disable="false" ng-change="leaveCtrl.noOfDays()" required>
+                        <span class="input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <span id="spanToDate" class="help-block" style="color:red;margin-left:8%;margin-top:0.5%;" ng-show="leaveForm.toDate.$error.required" ng-if="leaveForm.$submitted">To Date is required</span>
+                    <span class="help-block" style="color:red;margin-left:8%;margin-top:0.5%;" ng-show="dateValidation">ToDate should be greater than FromDate</span>
+                </div>
+                <div class="form-group form-inline no-days">
+                    <span class="form-check">
+                        <label for="filter">{{Labelctrl.LabelText.LabNoOfDays}}<span class="star">*</span></label>
+
+                        <div style="border:1px solid #d1d1d1; display:inline-block; padding:0 10px;   vertical-align: middle;">
+                            <input class="form-check-input" name="group101" ng-model="radio" type="radio" id="radio103" style="margin:10px 5px;vertical-align: middle;" value="{{Fday}}" checked>
+                            <span style="margin-right:10px;"> <span class="form-check-label" for="radio103" ng-model="Fday" value={{Fday}}>{{Fday}}</span></span>
+
+                            <input class="form-check-input" name="group101" type="radio" ng-model="radio" id="radio103" style="margin:10px 5px; vertical-align: middle;" value="{{Hday}}">
+
+                            <span> <span class="form-check-label" for="radio103" ng-model="Fday" value={{Hday}}>{{Hday}}</span></span>
+                        </div>
+                        <input type="text" class="form-control form-inline" ng-model="radio" style="width:50px;display:inline-block;margin-right:20px; visibility:hidden" />
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label for="filter">{{Labelctrl.LabelText.LabDescription}} <span class="star">*</span></label>
+                    <textarea rows="4" cols="60" name="comment" ng-model="remark" placeholder="Enter text here..." required></textarea>
+                    <span id="spanDescription" class="help-block" style="color:red;margin-left:8%;margin-top:0.5%;" ng-show="leaveForm.comment.$error.required" ng-if="leaveForm.$submitted">Description is required</span>
+                </div>
+
+                <div class="form-group">
+                    <label></label>
+                    <button type="submit" class="btn  btn-purple">Submit</button>  <!--ng-click="leaveCtrl.ApplyLeaves()"-->
+                    <button type="reset" class="btn btn-purple" ng-click="leaveCtrl.Clear()" formnovalidate>Clear   </button>
+
+                </div>
+            </div>
+
+
+            <!--<div class="form-inline" ng-repeat="item in leaveCtrl.EmpList">
+                <label for="filter">Earned Leaves</label>
+                <input type="text" class="form-control" value="{{item.earnedLeaves}}" readonly />
+            </div>-->
+            <!--<div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                <div class="leave-balance-list" ng-repeat="item in leaveCtrl.LeaveBalanceList | limitTo:1">
+                    <div class="form-inline">
+                        <label for="filter">Earned Leaves</label>
+                        <input type="text" class="form-control" value="{{item.earnedLeaves}}" readonly />
+                    </div>
+                    <div class="form-inline">
+                        <label for="filter">Leaves Taken</label>
+                        <input type="text" class="form-control" value="{{item.leavesTaken}}" readonly />
+                    </div>
+                    <div class="form-inline">
+                        <label for="filter">Holiday Leave Balance</label>
+                        <input type="text" class="form-control" value="{{item.holidaysLeaveBalance}}" readonly />
+                    </div>
+
+                    <div class="form-inline">
+                        <label for="filter">Holiday Leave</label>
+                        <input type="text" class="form-control" value="{{item.holidayLeave}}" readonly />
+                    </div>
+                    <div class="form-inline">
+                        <label for="filter">Sold Holiday</label>
+                        <input type="text" class="form-control" value="{{item.soldHoliday}}" readonly />
+                    </div>
+                    <div class="form-inline">
+                        <label for="filter">Sold Leave</label>
+                        <input type="text" class="form-control" value="{{item.soldLeave}}" readonly />
+                    </div>
+                    <div class="form-inline current-leave-bal">
+                        <label for="filter">Current Leave Balance</label>
+                        <input type="text" class="form-control" value="{{item.currentLeaveBalance}}" readonly />
+                    </div>
+                </div>
+            </div>-->
+
+            <div>
+                <!--ng-init="leaveCtrl.loadRequestedLeave()"-->
+                <div class="col-lg-12">
+                    <div class="header" style="margin-bottom: 1%;">
+                        <span style="margin-right:20%;">{{Labelctrl.LabelText.LabLeaveDetails}}</span>
+                    </div>
+                </div>
+                <!--<div style="margin: -4px 0 -14px -10px ;">
+                    <span style="color:red;margin-left: 2%">{{alertMessageForProgressedLeave}}</span>
+                </div>-->
+
+                <span class="alert alert-success-balance" ng-if="alertMessageForProgressedLeave.replace(' ','').length > 0">{{alertMessageForProgressedLeave}}</span>
+
+
+
+
+                <!--Norecords Found Start-->
+                <div ng-show="leaveCtrl.ShowNRImage_ReqLev==true" class="no-record-found">
+                    <img src="../../images/NoRecord.png" />
+                </div>
+                <!--Norecords Found End-->
+
+
+                <div ng-show="leaveCtrl.ShowNRImage_ReqLev==false">
+                    <div class="container_w">
+                        <div class="pull-right">
+                            <div class="H_search_w">
+                                <div class="containerSearch">
+                                    <i class="fa fa-search"></i>
+                                    <input type="search" id="search" ng-model="q" placeholder="Search..." />
+                                </div>
+                            </div>
+
+                            <div class="show_entries">
+                                <span>Show Entries</span>
+                                <span class="dropdown selectBOx_w">
+                                    <select ng-model="pageSize" id="pageSize" class="dropdown-menu btn btn-default  fa fa-chevron-down" aria-hidden="true">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                    </select>
+
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="inbox_content">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table_W apply_leave">
+                                <thead>
+                                    <tr>
+                                        <th style="display:none">Index</th>
+                                        <th ng-repeat="a in vm.editLeaveRequestTableTH  track by $index">
+                                            <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                            <lable>{{a.th}}</lable>-->
+                                            <lable>{{a}}</lable>
+                                        </th>
+                                        <th style="display:none">LeaveId</th>
+                                        <th style="display:none">IsFromWebsite</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in leaveCtrl.EmpList  | filter : q | startFrom:currentPage*pageSize | limitTo:pageSize" ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
+                                        <!--<tr ng-repeat="item in leaveCtrl.EmpList ">-->
+                                        <td style="display:none">{{$index}}</td>
+                                        <td>{{item.employeeId}}</td>
+                                        <td>{{item.employeeName}}</td>
+                                        <td>{{item.leaveTypeDesc}}</td>
+                                        <td>{{item.applyDate}}</td>
+                                        <td>{{item.fromDate}}</td>
+                                        <td>{{item.toDate}}</td>
+                                        <td>{{item.hours}}</td>
+                                        <td>{{item.days}}</td>
+                                        <td>{{item.remark}}</td>
+                                        <!--<td>{{item.status}}</td>-->
+                                        
+                                        <td ng-style="{color: item.approvalStatus=='Approved' ? 'green' : item.approvalStatus=='Cancelled' ? 'red' : 'Orange'}">{{item.approvalStatus}}</td>
+
+                                        <!--ng-click="leaveCtrl.EmployeeCancelLeave(item.leaveId,item.leaveTypeDesc)"-->
+                                        <!--<td><i class="fa fa-pencil-square-o" aria-hidden="true" value="{{item.editable}}" style="cursor:pointer;" ng-click="leaveCtrl.EmployeeCancelLeave(item.leaveId,item.leaveTypeDesc)"></i></td>-->
+                                        <!--<td><i  class="fa fa-pencil-square-o" aria-hidden="true" value="{{item.editable}}" style="cursor:pointer;" ng-click="leaveCtrl.EmployeeCancelLeave(item.leaveId,item.leaveTypeDesc,item.isFromWebsite)"></i></td>-->
+                                        <td><i class="fa fa-times-circle-o" aria-hidden="true" style="cursor: pointer;color:orangered;font-size:20px" ng-click="leaveCtrl.EmployeeCancelLeave(item.leaveId,item.leaveTypeDesc,item.isFromWebsite)"></i></td>
+                                        <td style="display:none">{{item.leaveId}}</td>
+                                        <td style="display:none">{{item.isFromWebsite}}</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <div class="app-leave-ftbl">
+                                <table class="table table-bordered table_W tbl-fixed-footer">
+                                    <tbody ng-class=leaveCtrl.showfooter>
+
+                                        <tr ng-repeat="item in leaveCtrl.CurrentLeaveBalanceListUptoLastYear | limitTo:1">
+                                            <th>Leave Balance Upto Last Year :{{item.currentLeaveBalance}}</th>
+                                        </tr>
+                                    </tbody>
+
+                                    <tbody ng-class=leaveCtrl.NoLeaveshowfooter ng-show="leaveCtrl.NoLeaveshowfooter==true?true:false">
+                                        <tr>
+                                            <th>No Leaves Available For Last Year</th>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                                <!--<table class="table table-bordered table_W tbl-fixed-footer" ng-show="leaveCtrl.NoLeaveshowfooter==true?true:false">
+                                    <tbody ng-class=leaveCtrl.NoLeaveshowfooter>
+                                        <tr>
+                                            <th>No Leaves Available For Last Year</th>
+                                        </tr>
+                                    </tbody>
+                                </table>-->
+                            </div>
+
+
+                            <ul class="pagination pagination-sm">
+
+
+                                <li><a ng-show="currentPage == 0 ? false : true" ng-click="currentPage=currentPage-1">Prev</a></li>
+                                <li class="active page_count"><a>{{currentPage+1}}/{{numberOfPages()}}</a></li>
+
+                                <li><a ng-show="currentPage >= getData().length/pageSize - 1 ? false : true" ng-click="currentPage=currentPage+1">Next<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+        </form>
+
+
+        <!--========================-->
+        <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':leaveCtrl.ShowCancelPopup}">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width:90%;">
+                    <div class="modal-header modal-header-primary">
+                        <button type="button" class="close" ng-click="leaveCtrl.ShowCancelPopup=false;" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><!--<i class="fa fa-warning" ></i>--> Cancel Leave</h4>
+                    </div>
+                    <!--<div>
+                        <button type="button" class="close" ng-click="leaveCtrl.ShowCancelPopup=false;" data-dismiss="modal" style="color:black;margin-right:5px;">&times;</button>
+                    </div>-->
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+
+
+
+                            <div>
+                                <!--<label class="control-label col-sm-3">Course Name</label>-->
+                                <div>
+                                    <!--<span class="login_logo_w"><img src="../../images/logo.png" /></span>-->
+                                    <label style="font-size:18px;font-weight:bold;" ng-model="LeaveCancel"><img src="../../images/CancelNew.png" />&nbsp;&nbsp;Please confirm the selected leave details will be delete!!!!!</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <span style="color:red;margin-right: 40%">{{alertMessageforCancel}}</span>
+
+                        <button type="button" class="btn btn-purple" data-dismiss="modal" ng-click="leaveCtrl.CancelLeaveByEmpId()">Confim</button>
+                        <button type="button" class="btn btn-purple" ng-click="leaveCtrl.ShowCancelPopup=false;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    </div>
+
+    <style>
+        .selected {
+            /*background-color: rgba(133, 82, 162, 0.2);*/
+            color: Black;
+            font-weight: bold;
+            /*//   font-size:16px;*/
+        }
+    </style>
+
+
+
