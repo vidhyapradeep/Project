@@ -1,0 +1,170 @@
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="container-fluid">
+        <div class="header">
+            <span>{{Labelctrl.LabelText.HdBankAccountDetail}}</span>
+        </div>
+    </div>
+
+    <div class="container_w" ng-controller="BankAccountCtrl as BankAccountCtrl">
+        <!--<div>
+          <span style="color:red;margin-left:30%;margin-bottom:5%;">{{alertMessage}}</span>
+        </div>-->
+        <!--Norecords Found Start-->
+        <div ng-show="BankAccountCtrl.ShowNRImage==true" class="no-record-found">
+            <img src="../../images/NoRecord.png" />
+        </div>
+        <!--Norecords Found End-->
+
+        <div class="table-responsive" ng-init="BankAccountCtrl.LoadUserBankAcountDetails()">
+            <div>
+                <!--<div class="leave-details pull-right">-->
+                <button type="button" class="btn btn-purple" style="visibility:hidden" ng-click="BankAccountCtrl.BtnAddAccountClick()">Add Account</button>
+                <!--</div>-->
+                <div class="pull-right marbtn">
+                    <div class="H_search_w">
+                        <div class="containerSearch">
+                            <i class="fa fa-search"></i>
+                            <input type="search" id="search" placeholder="Search..." ng-model="q" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div ng-show="BankAccountCtrl.ShowNRImage==false">
+                <table class="table table-bordered table_W tableheader">
+                    <thead>
+                        <tr>
+                            <th colspan="8">{{Labelctrl.LabelText.HdBankAccountDetail}}</th>
+                        </tr>
+                        <tr>
+                            <th ng-repeat="a in vm.bankaccTableTH  track by $index">
+                                <!--<span ng-if="a.subTh.length ==0">{{a.th}}</span>
+                                <lable>{{a.th}}</lable>-->
+                                <lable>{{a}}</lable>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="item in BankAccountDeatils | filter:q">
+                            <td>{{item.bankName}}</td>
+                            <td>{{item.routingNumber}}</td>
+                            <td>{{item.accountName}}</td>
+                            <td>{{item.accountNumber}}</td>
+                            <td ng-click="BankAccountCtrl.BtnEditAccountClick(item.bankId,item.routingNumber,item.accountName,item.accountNumber)"><i class="fa fa-pencil-square-o" aria-hidden="true" style="cursor:pointer;"></i></td>
+                            <!--<td ng-confirm-click="Are you sure to delete your bank details ?" confirmed-click="BankAccountCtrl.btnDeleteBankAccountClick(item.bankId,item.accountNumber)"><i class="fa fa-trash" aria-hidden="true" style="cursor:pointer;"></i></td>-->
+                            <!--<td ><i class="fa fa-trash" aria-hidden="true" style="cursor:pointer;visibility:hidden"     ng-click="BankAccountCtrl.getbtnDeleteBankAccountClick(item.bankId,item.accountNumber)"></i></td>-->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--</div>-->
+
+            <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':Showbankacc==true }">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" ng-click="BankAccountCtrl.CloseBtnPopUp()" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Bank Account Detail</h4>
+                        </div>
+                        <form id="BankDetailsForm" name="BankDetailsForm" method="post" ng-submit="BankAccountCtrl.btnSaveChangesClick(BankDetailsForm.$valid)" novalidate>
+                            <div class="modal-body">
+                                <div class="form-horizontal">
+
+                                    <!--<div>
+                                        <span style="color:red;margin-left:25%;margin-bottom:5%;">{{alertMessage}}</span>
+                                    </div>
+                                    <div>
+                                        <span style="color:green;margin-left:25%;margin-bottom:5%;">{{displayMessage}}</span>
+                                    </div>-->
+                                    <span class="alert alert-danger" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+
+
+                                    <span class="alert alert-success" ng-if="displayMessage.replace(' ','').length > 0">{{displayMessage}}</span>
+
+
+                                    <div class="form-group">
+                                        <label for="filter" class="control-label col-sm-3">Bank Name<span class="red">*</span></label>
+                                        <select class="col-sm-6 form-control" data-ng-model="SelectedBankId" id="SelectedBankId" name="selectedBankId" ng-change="BankAccountCtrl.OnSelect_BankName()" required>
+                                            <option style="display:none"> </option>
+                                            <option ng-repeat="item in BankNamesList" value="{{item.bankId}}" ng-selected="item.value == SelectedBankId">{{item.bankName}}</option>
+                                        </select>
+                                        <span id="SpanSelectedBankId" class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="BankDetailsForm.selectedBankId.$error.required" ng-if="BankDetailsForm.$submitted">Select bank name</span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Rounting number<span class="red">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" placeholder="" ng-model="txtRountingNumber" disabled id="txtRountingNumber" name="txtRountingNumber">
+                                        </div>
+                                        <span class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="BankDetailsForm.txtRountingNumber.$error.required" ng-if="BankDetailsForm.$submitted">Enter rounting number</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Account Name<span class="red">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" placeholder="" ng-model="txtAccntName" id="txtAccntName" name="txtAccntName" required>
+
+                                        </div>
+                                        <span id="spanAccName" class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="BankDetailsForm.txtAccntName.$error.required" ng-if="BankDetailsForm.$submitted">Enter account Name</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Account Number<span class="red">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" placeholder="" ng-model="txtAccntNumber" id="txtAccntNumber" name="txtAccntNumber" required>
+                                        </div>
+                                        <span id="spanAccNumber" class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="BankDetailsForm.txtAccntNumber.$error.required" ng-if="BankDetailsForm.$submitted">Select bank name</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" ng-click="BankAccountCtrl.CloseBtnPopUp()" class="btn btn-purple" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-purple">Save </button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!----------------PopUp For Delete------------------>
+
+            <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':BankAccountCtrl.ShowDeletePopup}">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="width:100%;">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" ng-click="BankAccountCtrl.ShowDeletePopup=false;" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><!--<i class="fa fa-warning" ></i>--> Delete Account</h4>
+                        </div>
+                        <!--<div>
+                            <button type="button" class="close" ng-click="leaveCtrl.ShowCancelPopup=false;" data-dismiss="modal" style="color:black;margin-right:5px;">&times;</button>
+                        </div>-->
+
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <div>
+                                    <!--<label class="control-label col-sm-3">Course Name</label>-->
+                                    <div>
+                                        <!--<span class="login_logo_w"><img src="../../images/logo.png" /></span>-->
+                                        <label style="font-size:18px;font-weight:bold;" ng-model="DeleteAccDetails"><img src="../../images/CancelNew.png" />&nbsp;&nbsp;Please confirm the selected Account details will be delete!!!!!</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <span style="color:red;margin-right:50%;margin-bottom:5%;">{{alertMessage}}</span>
+
+                            <button type="button" class="btn btn-purple" data-dismiss="modal" ng-click="BankAccountCtrl.btnDeleteBankAccountClick()">Confim</button>
+                            <button type="button" class="btn btn-purple" ng-click="BankAccountCtrl.ShowDeletePopup=false;">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
