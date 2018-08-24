@@ -1,0 +1,115 @@
+
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="container-fluid">
+        <div class="header">
+            <span>{{Labelctrl.LabelText.HdGenerateRequest}}</span>
+        </div>
+    </div>
+    <div ng-controller="generateRequestCtrl as generateRequestctrl">
+        <div class="container_w">
+            <!--<div>
+              <span style="color:red;margin-left:6%;margin-bottom:5%;">{{alertMessageForGenReq}}</span>
+            </div>-->
+            <span class="alert alert-danger" ng-if="alertMessageForGenReq.replace(' ','').length > 0">{{alertMessageForGenReq}}</span>
+
+
+            <span class="alert alert-success" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+
+            <form class="form-inline generate-request" name="generateRequestForm" method="post" ng-submit="generateRequestctrl.InsertMessagesForUser(generateRequestForm.$valid)" novalidate>
+                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                    <!--<div>
+                        <span style="color:green;margin-left:12%;">{{alertMessage}}</span>
+                    </div>-->
+                    <sp
+                    <span class="form-group">
+                        <label for="filter">{{Labelctrl.LabelText.LabMessage}}</label>
+                        <textarea rows="5" cols="90" name="comment" ng-model="message" ng-change="generateRequestctrl.ClearAlert();" required>Enter text here...</textarea>
+
+
+
+                        <span class="help-block" id="spanError" style="color:red;margin-left:13%;margin-top:10px;" ng-show="generateRequestForm.comment.$error.required" ng-if="generateRequestForm.$submitted">Please add Message</span>
+                        <br />
+                        <button type="submit" class="btn btn-purple">Submit</button>  <!--ng-click="generateRequestctrl.InsertMessages()"-->
+                    </span>
+                </div>
+
+
+            </form>
+        </div>
+
+
+        <div class="container-fluid" style="margin-bottom:20px;">
+            <div class="header">
+                <span>{{Labelctrl.LabelText.LabRequestDetails}}</span>
+            </div>
+        </div>
+
+        <!--Norecords Found Start-->
+        <div ng-show="generateRequestctrl.ShowNRImage==true" class="no-record-found">
+            <img src="../../images/NoRecord.png" />
+        </div>
+        <!--Norecords Found End-->
+
+        <div ng-show="generateRequestctrl.ShowNRImage==false">
+
+            <div class="container_w padd15">
+                <div class="pull-right">
+                    <div class="H_search_w">
+                        <div class="containerSearch">
+                            <i class="fa fa-search"></i>
+                            <input type="search" id="search" ng-model="q" placeholder="Search..." />
+                        </div>
+                    </div>
+
+                    <div class="show_entries">
+                        <span>Show Entries</span>
+                        <span class="dropdown selectBOx_w">
+                            <select ng-model="pageSize" id="pageSize" class="dropdown-menu btn btn-default  fa fa-chevron-down" aria-hidden="true">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                            </select>
+
+                        </span>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="table-responsive container_w gen-request">
+                <table class="table table-bordered table_W " ng-init="generateRequestctrl.GetRequestedMessagesForUser">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="a in vm.generateRequestTableTH  track by $index">
+                                <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>-->
+                                <!--<lable>{{a.th}}</lable>-->
+                                <lable>{{a}}</lable>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="item in generateRequestctrl.generateRequestedList | filter : q | startFrom:currentPage*pageSize | limitTo:pageSize">
+                            <td>{{item.requestedDate}}</td>
+                            <td style="color:#8552a2; width:34%; word-wrap: break-word;">{{item.message}}</td>
+                            <td>{{item.replied_RequestId}}</td>
+                            <td>{{item.repliedDate}}</td>
+                            <td style="color: #8552a2;width:34%; word-wrap: break-word;">{{item.reply}}</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+                <ul class="pagination pagination-sm">
+                    <li><a ng-show="currentPage == 0 ? false : true" ng-click="currentPage=currentPage-1">Prev</a></li>
+                    <li class="active page_count"><a>{{currentPage+1}}/{{numberOfPages()}}</a></li>
+                    <li><a ng-show="currentPage >= getData().length/pageSize - 1 ? false : true" ng-click="currentPage=currentPage+1">Next<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+                </ul>
+
+            </div>
+        </div>
+
+    </div>
+</div>
