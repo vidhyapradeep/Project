@@ -1,0 +1,284 @@
+
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="container-fluid">
+        <div class="header">
+            <span>{{Labelctrl.LabelText.HdTrainingSummary}}</span>
+        </div>
+
+    </div>
+    <div class="container_w" ng-controller="TrainingSummaryCtrl as TrnCtrl">
+        <!--<div>
+          <span style="color:red;margin-left:30%;margin-bottom:5%;">{{alertMessage}}</span>
+        </div>-->
+        <!--Norecords Found Start-->
+        <div ng-show="ShowNRImage==true" class="no-record-found">
+            <img src="../../images/NoRecord.png" />
+        </div>
+        <!--Norecords Found End-->
+
+        <div class="table-responsive">
+            <div class="leave-details mar15 pull-right">
+                <button class="btn btn-purple" ng-click="AddTraining();vm.AddTrainingSummaryfn()">Add Training Summary</button>
+            </div>
+
+
+
+            <table class="table table-bordered table_W tableheader" ng-show="ShowNRImage==false">
+                <thead>
+                    <tr>
+                        <th colspan="6">{{Labelctrl.LabelText.HdTrainingSummary}}</th>
+                    </tr>
+                    <tr>
+                        <th ng-repeat="a in vm.trainingsummaryTableTH  track by $index">
+                            <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>-->
+                            <!--<lable>{{a.th}}</lable>-->
+                            <lable>{{a}}</lable>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="course in TrnCtrl.TrainingDetails">
+                        <td class="internal-tarining-title" ng-click="vm.TrainingDetailfn()">{{course.courseName}}</td>
+                        <!--<td>{{course.startDate | date:'dd/MM/yyyy'}}</td>-->
+
+                 
+                        <td>{{course.startDate}}</td>
+                        <td>{{course.enddate}}</td>
+                        <td>{{course.status}}</td>
+                        <!--<td ng-click="edit(course);vm.TrainingEditfn()"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></td>-->
+                        <td ng-click="ClearAlertForUpdate();edit(course.courseId,course.startDate,course.enddate,course.statusId);EditTrainingByCourseId(course);vm.TrainingEditfn()"><i class="fa fa-pencil-square-o" aria-hidden="true" style="cursor:pointer;"></i></td>
+
+                        <td ng-click="DeleteTrainingByCourseId(course)"><i class="fa fa-trash" aria-hidden="true" style="cursor:pointer;"></i></td>
+                        <!--<td ng-click="DeleteTrainingByCourseId(course);vm.ShowDeletePopupfn()"><i class="fa fa-trash" aria-hidden="true"></i></td>-->
+                        <!--<td ng-click="vm.removeRow($index)"><i class="fa fa-trash" aria-hidden="true"></i></td>-->
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <!--<table class="table table-bordered table_W tableheader">
+            <thead>
+                <tr>
+                    <th colspan="6">Training Summary</th>
+                </tr>
+            </thead>
+            </table>-->
+        <!-----------Update training Details---------->
+        <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':vm.ShowTrainingEdit==true }">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <button type="button" class="close" ng-click="vm.closeTrainingDetailfn()" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">{{Labelctrl.LabelText.HdTrainingSummary}}</h4>
+                    </div>
+                    <form id="updateDetailsForm" name="updateDetailsForm" method="post" ng-submit="UpdateTrainingDetails(updateDetailsForm.$valid)" novalidate>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+
+                                <!--<div>
+                                    <span  style="color:green;margin-left:30%;margin-bottom:5%;">{{alertMessageForUpdate}}</span>
+                                </div>
+                                <div>
+                                    <span style="color:red;margin-left:30%;margin-bottom:5%;">{{errorMessageForUpdate}}</span>
+                                </div>-->
+
+
+                                <span class="alert alert-danger" ng-if="errorMessageForUpdate.replace(' ','').length > 0">{{errorMessageForUpdate}}</span>
+
+
+                                <span class="alert alert-success" ng-if="alertMessageForUpdate.replace(' ','').length > 0">{{alertMessageForUpdate}}</span>
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3">{{Labelctrl.LabelText.LabCourseName}}<span class="red">*</span></label>
+                                    <select class="col-sm-6 form-control" id="ddlCourseUpdate" name="ddlCourseUpdate" ng-model="courseIdUpdate" ng-options="data.courseId as data.courseName for data in TrnCtrl.courseNameList" ng-disabled="true" required></select>
+                                    <!--<span class="help-block" style="color:red; margin-left:8%;">{{errorMessage}}</span>-->
+                                    <span id="spanCourseUpdate" class="help-block" style="color:red; margin-left:8%;" ng-show="updateDetailsForm.ddlCourseUpdate.$error.required" ng-if="updateDetailsForm.$submitted">Select Course Name</span>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3">{{Labelctrl.LabelText.LabCourseStartDate}} <span class="red">*</span></label>
+                                    <div class="col-sm-6">
+                                        <div class='input-group date'>
+                                            <input ysec-datepiker id="txtStartDateUpdate" class="PPP" date-format="dd-MMM-yyyy" ng-model="startdateUpdate" name="startdateUpdate" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" autocomplete="off"
+                                                   past-date-disable="false" upcoming-date-disable="true" required>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span id="spanCourseStartDate" class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="updateDetailsForm.startdateUpdate.$error.required" ng-if="updateDetailsForm.$submitted">Course start date is required</span>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3">{{Labelctrl.LabelText.LabCourseEndDate}} <span class="red">*</span></label>
+                                    <div class="col-sm-6">
+                                        <div class='input-group date'>
+                                            <input ysec-datepiker id="txtEndDateUpdate" class="PPP" date-format="dd-MMM-yyyy" ng-model="enddateUpdate" name="enddateUpdate" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" autocomplete="off"
+                                                   past-date-disable="false" upcoming-date-disable="true" required>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                    <span id="spanCourseEndDate" class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="updateDetailsForm.enddateUpdate.$error.required" ng-if="updateDetailsForm.$submitted">Course End date is required</span>
+                                    <span class="help-block" style="color:red;margin-left:8%;margin-top:0.5%;" ng-show="dateValidationUpdate">Course End date should be greater than end date</span>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="filter" class="control-label col-sm-3">{{Labelctrl.LabelText.LabStatus}}<span class="red">*</span></label>
+                                    <!--<select id="ddlStatus"
+                                    ng-options="data.id as data.name for data in TrnCtrl.CourseStatusArr"></select>-->
+                                    <select id="ddlStatusUpdate" name="ddlStatusUpdate" class="col-sm-6 form-control" data-ng-model="statusUpdate" required>
+                                        <option></option>
+                                        <option value="1" ng-selected="value == statusUpdate">Enroll</option>
+                                        <option value="0" ng-selected="value == statusUpdate">Completed</option>
+                                    </select>
+                                    <!--<select id="ddlStatusUpdate" name="ddlStatusUpdate"  ng-model="statusUpdate" ng-options="data.id as data.name for data in TrnCtrl.CourseStatusArr" required></select>-->
+
+                                    <span id="spanStatusUpdate" class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="addDetailsForm.ddlStatusUpdate.$error.required" ng-if="addDetailsForm.$submitted">Select Status</span>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" ng-click="vm.closeTrainingDetailfn()" class="btn btn-purple" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-purple">Save</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <!---  Add new training details ---->
+        <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':vm.ShowTrainingSummaryEdit==true }">
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <button type="button" class="close" ng-click="vm.closeTrainingDetailfn()" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">{{Labelctrl.LabelText.HdTrainingSummary}}</h4>
+                    </div>
+                    <form id="addDetailsForm" name="addDetailsForm" method="post" ng-submit="AddTrainingDetails(addDetailsForm.$valid)" novalidate>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <!--<div>
+                                    <span   style="color:red;margin-left:30%;margin-bottom:5%;">{{errorMessageForUpdate}}</span>
+                                </div>
+                                <div>
+                                    <span  style="color:green;margin-left:30%;margin-bottom:5%;">{{alertMessage}}</span>
+                                </div>-->
+
+                                <span class="alert alert-danger" ng-if="errorMessageForUpdate.replace(' ','').length > 0">{{errorMessageForUpdate}}</span>
+
+
+                                <span class="alert alert-success" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3">{{Labelctrl.LabelText.LabCourseName}}<span class="red">*</span></label>
+                                    <!--<div class="col-sm-6">-->
+
+                                    <select class="col-sm-6 form-control" id="ddlCourseName" name="ddlCourseName" ng-model="courseSelect" required>
+                                        <option ng-repeat="coursenameList in  TrnCtrl.courseNameList" value="{{coursenameList.courseId}}">{{coursenameList.courseName}}</option>
+                                    </select>
+
+                                    <div>
+                                        <span class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;">{{errorMessage}}</span>
+                                        <span id="spanErrorCourse" class="help-block" style="color:red; margin-left:8%;" ng-show="addDetailsForm.ddlCourseName.$error.required" ng-if="addDetailsForm.$submitted">Select Course Name</span>
+                                    </div>
+
+                                    <!--</div>-->
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3">{{Labelctrl.LabelText.LabCourseStartDate}} <span class="red">*</span></label>
+                                    <div class="col-sm-6">
+                                        <div class='input-group date'>
+                                            <input ysec-datepiker id="txtStartDate" class="PPP" date-format="dd-MMM-yyyy" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" ng-model="StartDate" name="AddStartDate" autocomplete="off"
+                                                   past-date-disable="false" upcoming-date-disable="true" required>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span id="spanErrorStartdate" class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="addDetailsForm.AddStartDate.$error.required" ng-if="addDetailsForm.$submitted">Course start date is required</span>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3">{{Labelctrl.LabelText.LabCourseEndDate}}<span class="red">*</span></label>
+                                    <div class="col-sm-6">
+                                        <div class='input-group date'>
+                                            <input ysec-datepiker id="txtEndDate" class="PPP" date-format="dd-MMM-yyyy" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" ng-model="EndDate" name="AddEndDate" autocomplete="off"
+                                                   past-date-disable="false" upcoming-date-disable="true" required>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span id="spanErrorEnddate" class="help-block" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="addDetailsForm.AddEndDate.$error.required" ng-if="addDetailsForm.$submitted">Course end date is required</span>
+                                    <span class="help-block" style="color:red;margin-left:8%;margin-top:0.5%;" ng-show="dateValidation">Course start date should be greater than end date</span>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="filter" class="control-label col-sm-3">{{Labelctrl.LabelText.LabStatus}}<span class="red">*</span></label>
+                                    <!--<select id="ddlStatus"
+                                      ng-options="data.id as data.name for data in TrnCtrl.CourseStatusArr"></select>-->
+
+                                    <select id="ddlStatus" class="col-sm-6 form-control" name="ddlStatus" ng-model="Status" required>
+                                        <option></option>
+                                        <option value="1">Enroll</option>
+                                        <option value="0">Completed</option>
+                                    </select>
+                                    <span class="help-block" id="spanStatus" style="color:red; margin-left:8%;margin-top:0.5%;" ng-show="addDetailsForm.ddlStatus.$error.required" ng-if="addDetailsForm.$submitted">Select Status</span>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" ng-click="vm.closeTrainingDetailfn();Reset()" class="btn btn-purple" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-purple">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-------  Delete Confirmation Popup -------->
+        <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':TrnCtrl.ShowDeletePopupfnc==true}">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width:90%;">
+                    <div class="modal-header modal-header-primary">
+                        <button type="button" class="close" ng-click="TrnCtrl.ShowDeletePopupfnc=false;" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><!--<i class="fa fa-warning" ></i>--> {{Labelctrl.LabelText.HdCancelTrainingDetails}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div>
+                                <div>
+                                    <label style="font-size:18px;font-weight:bold;" ng-model="LeaveCancel"><img src="../../images/CancelNew.png" />&nbsp;&nbsp;Please confirm the selected training details will be delete!!!!!</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <span style="color:red;margin-right:40%;margin-bottom:5%;">{{errorMessageFordelete}}</span>
+                        <button type="button" class="btn btn-purple" data-dismiss="modal" ng-click="DeleteTrainingDetails()">Confim</button>
+                        <button type="button" class="btn btn-purple" ng-click="TrnCtrl.ShowDeletePopupfnc=false;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
