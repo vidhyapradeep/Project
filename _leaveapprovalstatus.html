@@ -1,0 +1,569 @@
+﻿<div class="container-fluid">
+    <div class="header">
+        <span>Approval Details</span>
+    </div>
+</div>
+<!--=================-->
+
+<section id="tipdetails" class="container_w">
+    <div class="row" ng-controller="LabelCtrl as Labelctrl">
+        <div class="col-xs-12 ">
+            <nav>
+                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+
+                    <a ng-click="vm.TabFun(0)" ng-class="{'active':vm.tabView==0}">Leave Approval </a>
+                    <a ng-click="vm.TabFun(1)" ng-class="{'active':vm.tabView==1}">Advance Approval </a>
+
+
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+
+
+                <div class="tab-pane show in active" ng-show="vm.tabView==0">
+
+
+                    <div ng-controller="LeaveCtrl as leaveCtrl" ng-init="leaveCtrl.loadGrid()">
+
+
+
+                        <!--Norecords Found Start-->
+                        <div ng-show="leaveCtrl.ShowNRImage==true" class="no-record-found">
+                            <img src="../../images/NoRecord.png" />
+                        </div>
+                        <!--Norecords Found End-->
+
+                        <div ng-show="leaveCtrl.ShowNRImage==false">
+
+                            <div class="container_w">
+                                <div class="pull-left form-group form-inline">
+                                    <label for="filter" style="font:bold;">{{Labelctrl.LabelText.LabEmployeeId}} :</label>
+                                    <span>
+                                        <select class="form-control" ng-model="search">
+                                            <option style="display:none">
+                                            <option ng-repeat="item in  leaveCtrl.EmpList  | unique : 'employeeId'" value="{{item.employeeId}}">{{item.employeeId}}</option>
+                                        </select>
+                                    </span>
+                                    <span>
+                                        <button class="btn btn-purple" ng-click="leaveCtrl.Clearsearch()" style="margin-left:10px;">List All Employees</button>
+                                    </span>
+                                </div>
+
+                                <div class="pull-right">
+                                    <div class="H_search_w">
+                                        <div class="containerSearch">
+                                            <i class="fa fa-search"></i>
+                                            <input type="search" id="search" ng-model="q" placeholder="Search..." />
+                                        </div>
+                                    </div>
+                                    <div class="show_entries">
+                                        <span>Show Entries</span>
+                                        <span class="dropdown selectBOx_w" style="border:none;">
+                                            <select ng-model="pageSize" id="pageSize" class="form-control" style="border-radius:0px;height:30px;">
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                            </select>
+
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="alert alert-success-balance" ng-if="alertMessageForLeaveApproval.replace(' ','').length > 0">{{alertMessageForLeaveApproval}}</span>
+                            </div>
+
+
+
+                            <!--<div style="margin:-10px 0 10px 100px;">
+                <span style="color:red;margin-left: 32%;">{{alertMessageForLeaveApproval}}</span>
+            </div>-->
+                            <!--<div style="margin:-10px 0 10px 100px;">
+                <span class="alert alert-danger" ng-if="alertMessageForLeaveApproval.replace(' ','').length > 0">{{alertMessageForLeaveApproval}}</span>
+            </div>-->
+
+                            <div class="inbox_content padd15">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table_W apply_leave">
+                                        <thead>
+                                            <tr>
+                                                <th ng-repeat="a in vm.leaveapprovalstatusTableTH  track by $index">
+                                                    <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                    <lable>{{a.th}}</lable>-->
+                                                    <lable>{{a}}</lable>
+                                                </th>
+                                                <th style="display:none">LeaveId</th>
+                                                <th style="display:none">LocationId</th>
+                                                <th style="display:none">HierachyId</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!--<tr ng-repeat="item in leaveCtrl.EmpList  | filter : q  |startFrom:currentPage*pageSize | limitTo:pageSize">-->
+                                            <tr ng-repeat="item in leaveCtrl.EmpList  | filter : {employeeId:search ,employeeName:q}  |startFrom:currentPage*pageSize | limitTo:pageSize">
+                                                <td>{{item.employeeId}}</td>
+                                                <td>{{item.employeeName}}</td>
+                                                <td>{{item.leaveTypeDesc}}</td>
+                                                <td>{{item.applyDate}}</td>
+                                                <td>{{item.fromDate}}</td>
+                                                <td>{{item.toDate}}</td>
+                                                <td>{{item.hours}}</td>
+                                                <td>{{item.days}}</td>
+                                                <td style="width: 29%;">{{item.remark}}</td>
+                                                <!--<td>{{item.status}}</td>leaveCtrl.LoadRequestedLeavesByEmpId(item.fromDate)-->
+                                                <td> <a style="color:#8552a2; cursor:pointer;" ng-click="leaveCtrl.LoadRequestedLeavesByEmpId(item.employeeId,item.leaveId,item.locationId,item.hierachyId);">History</a></td> <!--vm.LeaveBalancefn()-->
+                                                <td>
+                                                    <button class="btn btn-success" ng-click="leaveCtrl.approveLeave(item.leaveId,item.employeeId)">Approve</button>
+                                                    <button class="btn btn-danger" ng-click="leaveCtrl.cancelLeave(item.leaveId,item.employeeId)">Cancel</button>
+                                                </td>
+                                                <td style="display:none">{{item.leaveId}}</td><!--style="display:none"-->
+                                                <td style="display:none">{{item.locationId}}</td>
+                                                <td style="display:none">{{item.hierachyId}}</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+
+
+
+                                    <ul class="pagination pagination-sm">
+                                        <li><a ng-show="currentPage == 0 ? false : true" ng-click="currentPage=currentPage-1">Prev</a></li>
+                                        <li class="active page_count"><a>{{currentPage+1}}/{{numberOfPages()}}</a></li>
+                                        <li><a ng-show="currentPage >= getData().length/pageSize - 1 ? false : true" ng-click="currentPage=currentPage+1">Next<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+                                    </ul>
+
+                                    <div class="modal fadein internation-training-details" role="dialog" ng-class="{'active':leaveCtrl.ShowLeaveBalance}">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header modal-header-primary">
+                                                    <button type="button" class="close" ng-click="leaveCtrl.ShowLeaveBalance=false;" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">{{Labelctrl.LabelText.LabLeaveBalance}}</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="inbox_content padd15">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered table_W apply_leave">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th ng-repeat="a in vm.leaveDetails_leaveBalanceTH  track by $index">
+                                                                            <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                                            <lable>{{a.th}}</lable>-->
+                                                                            <lable>{{a}}</lable>
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="item in leaveCtrl.ApLeaveBalanceList">
+                                                                        <!--<td>{{item.employeeId}}</td>
+                                                        <td>{{item.employeeName}}</td>-->
+                                                                        <!--<td>{{item.joinDate}}</td>-->
+                                                                        <td>{{item.earnedLeaves}}</td>
+                                                                        <td>{{item.leavesTaken}}</td>
+                                                                        <td>{{item.holidaysLeaveBalance}}</td>
+                                                                        <td>{{item.holidayLeave}}</td>
+                                                                        <td>{{item.soldHoliday}}</td>
+                                                                        <td>{{item.soldLeave}}</td>
+
+                                                                        <td style="background-color:rgba(133, 82, 162, 0.5); ;font-weight:bold;font-size:16px;">{{item.currentLeaveBalance}}</td>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered table_W apply_leave">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th ng-repeat="a in vm.GetLeaveRequestByEmpIdTableTH  track by $index">
+                                                                            <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                                            <lable>{{a.th}}</lable>-->
+                                                                            <lable>{{a}}</lable>
+                                                                        </th>
+                                                                        <th style="display:none">LeaveId</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="item in EmpListByEmpId ">
+                                                                        <!--<td>{{item.employeeId}}</td>
+                                                        <td>{{item.employeeName}}</td>-->
+                                                                        <td>{{item.leaveTypeDesc}}</td>
+                                                                        <td>{{item.applyDate}}</td>
+                                                                        <td>{{item.fromDate}}</td>
+                                                                        <td>{{item.toDate}}</td>
+                                                                        <td>{{item.hours}}</td>
+                                                                        <td>{{item.days}}</td>
+                                                                        <td>{{item.remark}}</td>
+                                                                        <td ng-style="{color: item.approvalStatus=='Approved' ? 'green' : item.approvalStatus=='Cancelled' ? 'red' : 'Orange'}">{{item.approvalStatus}}</td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" ng-click="leaveCtrl.ShowLeaveBalance=false;" class="btn btn-purple" data-dismiss="modal">Close</button>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':leaveCtrl.ShowApprovePopup}">
+                            <div class="modal-dialog">
+                                <div class="modal-content" style="width:90%;">
+                                    <div class="modal-header modal-header-primary">
+                                        <button type="button" class="close" ng-click="leaveCtrl.ShowApprovePopup=false;" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title"><!--<i class="fa fa-warning" ></i>--> Approve Leave</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal">
+                                            <div>
+                                                <div>
+                                                    <label style="font-size:18px;font-weight:bold;" ng-model="LeaveApprove"><img src="../../images/ApprvNew.png" />&nbsp;&nbsp;Leave has been Approved </label> <!--{{LeaveApprove}}-->
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-purple" ng-click="leaveCtrl.ShowApprovePopup=false;">Close</button>
+                                    </div>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+
+
+
+                        <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':leaveCtrl.ShowApproveCanPopup}">
+                            <div class="modal-dialog">
+                                <div class="modal-content" style="width:90%;">
+                                    <div class="modal-header modal-header-primary">
+                                        <button type="button" class="close" ng-click="leaveCtrl.ShowApproveCanPopup=false;" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title"><!--<i class="fa fa-warning" ></i>--> Cancel Leave</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal">
+                                            <div>
+                                                <div>
+                                                    <label style="font-size:18px;font-weight:bold;" ng-model="LeaveCancel"><img src="../../images/CancelNew.png" />&nbsp;&nbsp;Leave has been Cancelled</label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-purple" ng-click="leaveCtrl.ShowApproveCanPopup=false;">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!---------No Leave Available Popup----------->
+
+                    <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':leaveCtrl.ShowNoLeaveAvailablePopup}">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="width:60%;">
+                                <div class="modal-header modal-header-primary">
+                                    <button type="button" class="close" ng-click="leaveCtrl.ShowNoLeaveAvailablePopup=false;" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title"><!--<i class="fa fa-warning" ></i>-->  Leave Details</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form-horizontal">
+                                        <div>
+                                            <div>
+                                                <label style="font-size:18px;font-weight:bold;" ng-model="NoLeave">  <img src="../../images/No-Leave.png" />&nbsp;&nbsp;No Leave Available </label> <!--{{LeaveApprove}}-->
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-purple" ng-click="leaveCtrl.ShowNoLeaveAvailablePopup=false;">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+                <div class="tab-pane show in active" ng-show="vm.tabView==1">
+                    <div class="employee-options mar15" ng-controller="ApprovalCtrl as Approvalctrl" ><!--ng-init="Approvalctrl.GetAllStaffAdvanceApprovalList()"-->
+
+                        <!--Norecords Found Start-->
+                        <div ng-show="Approvalctrl.ShowNRImage_ApvAdv==true" class="no-record-found">
+                            <img src="../../images/NoRecord.png" />
+                        </div>
+                        <!--Norecords Found End-->
+
+                        <div ng-show="Approvalctrl.ShowNRImage_ApvAdv==false">
+                            <div class="container_w">
+                                <div class="pull-left form-group form-inline">
+                                    <label for="filter" style="font:bold;">{{Labelctrl.LabelText.LabEmployeeId}} :</label>
+                                    <span>
+                                        <select class="form-control" ng-model="searchApv" ng-click="Approvalctrl.SortAsc()"> 
+                                            <option style="display:none">
+                                            <option ng-repeat="item in Approvalctrl.AllAdvanceApprovalList | unique : 'employeeId'" value="{{item.employeeId}}">{{item.employeeId}}</option>
+                                        </select>
+                                    </span>
+                                    <span>
+                                        <button class="btn btn-purple" ng-click="Approvalctrl.ClearsearchApv()" style="margin-left:10px;">List All Employees</button>
+                                    </span>
+                                </div>
+
+                                <div class="pull-right">
+                                    <div class="H_search_w">
+                                        <div class="containerSearch">
+                                            <i class="fa fa-search"></i>
+                                            <input type="search" id="search" ng-model="p" placeholder="Search..." />
+                                        </div>
+                                    </div>
+                                    <div class="show_entries">
+                                        <span>Show Entries</span>
+                                        <span class="dropdown selectBOx_w" style="border:none;">
+                                            <select ng-model="ApvpageSize" id="pageSize" class="form-control" style="border-radius:0px;height:30px;">
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                            </select>
+
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="alert alert-success-balance" ng-if="alertMessageForAdvApproval.replace(' ','').length > 0">{{alertMessageForAdvApproval}}</span>
+                            </div>
+
+                            <!--<div style="margin:-10px 0 10px 100px;">
+                        <span style="color:red;margin-left: 32%;">{{alertMessageForAdvApproval}}</span>
+                    </div>-->
+
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered table_W tableheader">
+                                    <thead>
+                                        <tr style="display:none;">
+                                            <th colspan="4">Employee Options</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="display:none">Index</th>
+                                            <th style="display:none">advanceId</th>
+                                            <th style="display:none">contactId</th>
+                                            <th style="display:none">advanceTypeId</th>
+                                            <th style="display:none">currencyId</th>
+
+                                            <th ng-repeat="a in vm.AdvanceApprovalTableTH  track by $index">
+                                                <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                                <lable>{{a.th}}</lable>-->
+                                                <lable>{{a}}</lable>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!--<tr ng-repeat="a in vm.employeeoptionsTableTD track by $index" ng-class="{'slectedRow':a.checked}">
+                                    <td ng-repeat="b in a.tr track by $index">
+                                        <span ng-if="b.subTd.length==0">{{b.td}}</span>
+                                        <lable>{{b.td}}</lable>
+                                    </td>
+                                </tr>-->
+                                        <!--<tr ng-repeat="item in Approvalctrl.AllAdvanceApprovalList  | filter : p | startFrom:currentPage*ApvpageSize | limitTo:ApvpageSize">-->
+                                       
+                                        <tr ng-repeat="item in Approvalctrl.AllAdvanceApprovalList  | filter : {employeeId:searchApv ,fullName:p} | startFrom:currentPage*ApvpageSize | limitTo:ApvpageSize">
+                                            <td style="display:none">{{$index}}</td>
+                                            <td style="display:none">{{item.advanceId}}</td>
+                                            <td style="display:none">{{item.contactId}}</td>
+                                            <td style="display:none">{{item.advanceTypeId}}</td>
+                                            <td style="display:none">{{item.currencyId}}</td>
+                                            <td>{{item.employeeId}}</td>
+                                            <td>{{item.fullName}}</td>
+                                            <td>{{item.description}}</td>
+                                            <td>{{item.currency}}</td>
+                                            <td>{{item.date}}</td>
+                                            <td class="currency-align">{{item.amount | currency:"":2}}</td>
+                                            <td>{{item.remark}}</td>
+                                            <td>{{item.paybackCount}}</td>
+
+                                            <!--<td>{{item.isActive}}</td>-->
+                                            <td> <a style="color:#8552a2; cursor:pointer;" ng-click="Approvalctrl.ViewEMIDetails(item.advanceId,item.employeeId,item.date,item.currency,item.amount);">View</a></td>
+
+
+                                            <td>
+                                                <button class="btn btn-success" ng-click="Approvalctrl.ApproveAdvanceApproval(item.advanceId,item.employeeId)">Approve</button>
+                                                <button class="btn btn-danger" ng-click="Approvalctrl.CancelAdvanceApproval(item.advanceId,item.employeeId)">Cancel</button>
+                                            </td>
+
+                                            <!--<td>{{item.ApprovalStatus}}</td>-->
+
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+
+
+                                <ul class="pagination pagination-sm">
+                                    <li><a ng-show="currentPage == 0 ? false : true" ng-click="currentPage=currentPage-1">Prev</a></li>
+                                    <li class="active page_count"><a>{{currentPage+1}}/{{numberOfPages()}}</a></li>
+                                    <li><a ng-show="currentPage >= getData().length/ApvpageSize - 1 ? false : true" ng-click="currentPage=currentPage+1">Next<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+                                </ul>
+
+                            </div>
+
+                            <!--////////////////////////-->
+
+                            <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':Approvalctrl.ShowApprovePopup}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content" style="width:90%;">
+                                        <div class="modal-header modal-header-primary">
+                                            <button type="button" class="close" ng-click="Approvalctrl.ShowApprovePopup=false;" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title"><!--<i class="fa fa-warning" ></i>--> Approve Request</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="form-horizontal">
+                                                <div>
+                                                    <div>
+                                                        <label style="font-size:18px;font-weight:bold;" ng-model="LeaveApprove"><img src="../../images/ApprvNew.png" />&nbsp;&nbsp; Request has been Approved </label>  <!--{{LeaveApprove}}-->
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-purple" ng-click="Approvalctrl.ShowApprovePopup=false;">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':Approvalctrl.ShowCancelPopup}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content" style="width:90%;">
+                                        <div class="modal-header modal-header-primary">
+                                            <button type="button" class="close" ng-click="Approvalctrl.ShowCancelPopup=false;" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title"><!--<i class="fa fa-warning" ></i>--> Cancel Request</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="form-horizontal">
+                                                <div>
+                                                    <div>
+                                                        <label style="font-size:18px;font-weight:bold;" ng-model="LeaveCancel"><img src="../../images/CancelNew.png" />&nbsp;&nbsp;Request has been Cancelled</label>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-purple" ng-click="Approvalctrl.ShowCancelPopup=false;">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="modal fadein internation-training-details" role="dialog" ng-class="{'active':Approvalctrl.viewEMIForm==true }">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content" style="width: 70%;">
+                                        <div class="modal-header modal-header-primary">
+                                            <button type="button" class="close" ng-click="Approvalctrl.ClosePopUp()" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">PayBack Schedule</h4>
+                                        </div>
+                                        <!--          <div class="modal-body" ng-init="ViewTaxCtrl.btnViewTaxDetailsClick()">-->
+
+
+                                        <div style="margin:5px 0 0 30px;">
+
+                                            <div>
+                                                <label style="margin:7px 15px 7px 0;">{{Labelctrl.LabelText.LabEmployeeId}}</label>
+                                                <label ng-model="LabelEmployeeId" style="color:#8552a2;">{{LabelEmployeeId}}</label>
+                                            </div>
+                                            <div>
+                                                <label style="margin:7px 50px 7px 0;">{{Labelctrl.LabelText.LabDate}}</label>
+                                                <label ng-model="LabelDate" style="color:#8552a2;">{{LabelDate}}</label>
+                                            </div>
+                                            <div>
+                                                <label style="margin:7px 35px 7px 0;">{{Labelctrl.LabelText.LabAmount}}</label>
+                                                <label ng-model="LabelDate" style="color:#8552a2;">{{LabelAmount | currency:"":2}}</label>
+                                            </div>
+                                            <div>
+                                                <label style="margin:7px 30px 7px 0;">{{Labelctrl.LabelText.LabCurrency}}</label>
+                                                <label ng-model="LabelCurrency" style="color:#8552a2;">{{LabelCurrency}}</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="inbox_content padd15">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table_W tableheader" style="margin-top:10px;">
+                                                    <thead>
+                                                        
+                                                        <tr>
+                                                            <th ng-repeat="a in vm.paybackscheduleTableTH  track by $index">
+                                                                <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                                                <lable>{{a.th}}</lable>-->
+                                                                <lable>{{a}}</lable>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="item in EMIDetailsByAdanceId ">
+                                                            <td>{{item.salaryPeriod}}</td>
+                                                            <td>{{item.amount}}</td>
+                                                            <td>{{item.paidAmount}}</td>
+                                                            <td>{{item.balance}}</td>
+
+                                                        </tr>
+                                                        <tr class="payslip-summary" ng-repeat="item in EMIDetailsByAdanceId | limitTo:1">
+                                                            <td>{{Labelctrl.LabelText.LabTotal}}</td>
+                                                            <td>{{item.sumOfAmount | currency:"":2}}</td>
+                                                            <td>{{item.sumOfPaidAmount | currency:"":2}}</td>
+                                                            <td>{{item.sumOfBalance | currency:"":2}}</td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <!-- </div>-->
+                                        <div class="modal-footer">
+                                            <button type="button" ng-click="Approvalctrl.ClosePopUp()" class="btn btn-purple" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            </div>
+
+        </div>
+   
+</section>
+<!--======================================-->
+<!--</form>
+</div>-->
+
+
+<style>
+    .modal-body .inbox_content {
+        width: 100%;
+    }
+</style>
