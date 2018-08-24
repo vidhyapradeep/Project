@@ -1,0 +1,24 @@
+﻿
+<div class="inbox_w">
+    <div class="hrms-homepage">
+        <div class="col " ng-repeat="a in vm.leftMenu">
+
+            <div>
+                <div class="{{a.class}}">
+                    <i class="fa fa-{{a.labelClass}}" aria-hidden="true"></i>
+                </div>
+                <label class="{{a.labelClass}}">{{a.menu}}</label>
+
+            </div>
+
+            <div class="tabs-menu">
+                <ul>
+                    <li ng-repeat="b in a.subMenu" ui-sref-active="active">
+                        <a ui-sref="private.{{b.configUrl.replace('&','_').replace(' ','').replace(' ','') | lowercase}}">{{b.menu}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
