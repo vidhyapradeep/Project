@@ -1,0 +1,339 @@
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="container-fluid">
+        <div class="header">
+            <span>Personal Details</span>
+        </div>
+    </div>
+    <div class="container_w" ng-controller="EmployeeDetailsCtrl as EmpCtrl">
+        <div>
+            <!--<span style="color:green;margin-left:30%;margin-bottom:5%;">{{alertMessage}}</span>
+            <span style="color:red;margin-left:-10%;margin-bottom:5%;">{{errorMessage}}</span>-->
+            <span class="alert alert-danger" ng-if="errorMessage.replace(' ','').length > 0">{{errorMessage}}</span>
+
+
+            <span class="alert alert-success" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+
+        </div>
+        <div class="upload-sec">
+            <div style="width:83%;float:left">
+                <table class="table table-bordered table_W tableheader user_name">
+                    <thead>
+                        <tr>
+                            <th>{{Labelctrl.LabelText.LabName}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{EmpCtrl.EmployeeDetails[0].fullName}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <table class="table table-bordered table_W tableheader personal-info">
+                    <thead>
+                        <tr>
+                            <th colspan="6">{{Labelctrl.LabelText.LabAddress}}</th>
+                        </tr>
+                        <tr>
+
+                            <th>{{Labelctrl.LabelText.LabAddress}}</th>
+                            <th>{{Labelctrl.LabelText.PHCountry}}</th>
+                            <th>{{Labelctrl.LabelText.LabEditSave}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-init="mySwitch=true">
+
+                            <td><input id="HAddress" type="text" ng-disabled="mySwitch" value="{{EmpCtrl.EmployeeDetails[0].address}}" /></td>
+                            <td>
+
+                                <select id="ddlCountry" ng-model="EmpCtrl.EmployeeDetails[0].countryId" ng-disabled="mySwitch"
+                                        ng-options="data.countryId as data.countryName for
+                                 data in EmpCtrl.countryList"></select>
+                            </td>
+                            <td ng-click="mySwitch=false">
+                                <span class="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                <span class="edit"><i class="fa fa-floppy-o" aria-hidden="true" ng-click="UpdateEmployeeDetails();"></i></span> <!--ng-class="{'selected':$index == selectedRow}"-->
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div style="width: 15%;float: left;margin-left: 2%;">
+                <div style="width:100%;">
+                    <table class="table table-bordered table_W tableheader personal-info upload-photo" style="height:170px;">
+                        <thead>
+                            <tr>
+                                <th>{{Labelctrl.LabelText.LabUploadLatestPhoto}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--<tr>
+                              <td>
+                             <label><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVScX44baeJmxuLCUK3ZqRzWWHxsLwJnboI8kCqHp7UbSIAWrR" /></label>
+                                <div class="upload-img">
+                                  <span class="input-group-btn">
+                                    <span class="btn btn-file btn-purple">
+                                      Upload Photo<input type="file" id="imgInp">
+                                    </span>
+                                  </span>
+                                    <span class="edit">Save Photo</span>
+                                  <img id='img-upload' />
+
+                                  </div>
+
+                              </td>
+                            </tr>-->
+
+                            <tr>
+                                <td>
+                                    <label>
+                                        <img ng-src="{{userimage}}" ng-model="userimage" id="previewImg" /> <!--src="../images/proImg.jpg"-->
+                                    </label>
+
+                                    <div class="upload-img">
+                                        <span class="input-group-btn">
+                                            <span class="btn-file edit">
+                                                <i class="fa fa-upload" aria-hidden="true"></i><input type="file" id="imgInp" ng-model="AlbumPic" file-upload>
+                                            </span>
+                                        </span>
+                                        <span class="edit" ng-click="UpdateImage();"><i class="fa fa-floppy-o" aria-hidden="true"></i></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="conatiner_w">
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                    <table class="table table-bordered table_W tableheader personal-info">
+                        <thead>
+                            <tr>
+                                <th colspan="5">{{Labelctrl.LabelText.LabContactDetails}}</th>
+                            </tr>
+                            <tr>
+                                <th>{{Labelctrl.LabelText.LabContactType}}</th>
+                                <th>{{Labelctrl.LabelText.LabPhoneNumber}}</th>
+                                <!--<th>Extension</th>-->
+                                <th>{{Labelctrl.LabelText.LabPreferred}}</th>
+                                <th>{{Labelctrl.LabelText.LabEditSave}}</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-init="mySwitch2=true">
+                                <td><input type="text" value="Mobile" ng-disabled="mySwitch2" readonly /></td>
+                                <td><input id="txtMobile" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;" ng-disabled="mySwitch2" value="{{EmpCtrl.EmployeeDetails[0].mobile}}" /></td>
+                                <!--<td><input type="text" value="" ng-disabled="mySwitch2" /></td>-->
+                                <td><input id="ContactPhone" type="checkbox" ng-disabled="mySwitch2" ng-checked="EmpCtrl.EmployeeDetails[0].mobilePrefered == true" value="{{EmpCtrl.EmployeeDetails[0].mobilePrefered}}" /></td>
+                                <td ng-click="mySwitch2=false">
+                                    <span class="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                    <span class="edit"><i class="fa fa-floppy-o" aria-hidden="true" ng-click="UpdateEmployeeDetails()"></i></span>
+
+                            </tr>
+                            <tr ng-init="mySwitch3=true">
+                                <td><input type="text" value="Email" ng-disabled="mySwitch3" readonly /></td>
+                                <td><input id="txtEmail" type="text" ng-disabled="mySwitch3" value="{{EmpCtrl.EmployeeDetails[0].email}}" /></td>
+                                <!--<td><input type="text" value="" ng-disabled="mySwitch3" /></td>-->
+                                <td><input id="ContactEmail" type="checkbox" ng-disabled="mySwitch3" ng-checked="EmpCtrl.EmployeeDetails[0].emailPrefered == true" value="{{EmpCtrl.EmployeeDetails[0].emailPrefered}}" /></td>
+                                <td ng-click="mySwitch3=false">
+                                    <span class="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                    <span class="edit"><i class="fa fa-floppy-o" aria-hidden="true" ng-click="UpdateEmployeeDetails()"></i></span>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                    <table class="table table-bordered table_W tableheader personal-info">
+                        <thead>
+                            <tr>
+                                <th colspan="4">{{Labelctrl.LabelText.LabEmergencyContact}}</th>
+                            </tr>
+                            <tr>
+                                <th>{{Labelctrl.LabelText.LabName}}</th>
+                                <th>{{Labelctrl.LabelText.LabRelationshiptoEmp}}</th>
+                                <th>{{Labelctrl.LabelText.LabPrimaryContact}}</th>
+                                <th>{{Labelctrl.LabelText.LabEditSave}}</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-init="mySwitch4=true">
+                                <td><input id="txtEmergencyName" type="text" ng-disabled="mySwitch4" value="{{EmpCtrl.EmployeeDetails[0].emergencyContactName}}" /></td>
+                                <td><input id="txtemergencyRelation" type="text" ng-disabled="mySwitch4" value="{{EmpCtrl.EmployeeDetails[0].emergencyContactRelationship}}" /></td>
+                                <td><input id="txtemergencyPhonenumber" type="text" ng-disabled="mySwitch4" value="{{EmpCtrl.EmployeeDetails[0].emergencyContactPhoneNumber}}" /></td>
+                                <td><input type="checkbox" id="txtemergencyIsPrimary" ng-checked="EmpCtrl.EmployeeDetails[0].emergencyIsPrimary == true" value="{{EmpCtrl.EmployeeDetails[0].emergencyIsPrimary}}" ng-disabled="mySwitch4" /></td>
+                                <td ng-click="mySwitch4=false">
+                                    <span class="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                    <span class="edit"><i class="fa fa-floppy-o" aria-hidden="true" ng-click="UpdateEmployeeDetails()"></i></span>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="conatiner_w">
+
+            <div class="row">
+
+                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                    <table class="table table-bordered table_W tableheader personal-info">
+                        <thead>
+                            <tr>
+                                <th colspan="3">{{Labelctrl.LabelText.LabMaritalStatus}}</th>
+                            </tr>
+                            <tr>
+                                <th>{{Labelctrl.LabelText.LabMaritalStatus}}</th>
+                                <th>{{Labelctrl.LabelText.LabMarriageDate}}</th>
+                                <th>{{Labelctrl.LabelText.LabEditSave}}</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-init="mySwitch6=true">
+                                <td style="display:none"><input id="txtMaritalStatus" type="text" ng-disabled="mySwitch6" value="{{EmpCtrl.EmployeeDetails[0].maritalStatus}}" /></td>
+                                <td>
+
+                                    <select id="ddlMaritalStatus" ng-model="EmpCtrl.EmployeeDetails[0].maritalStatusId" ng-disabled="mySwitch6" ng-change="disableDate()"
+                                            ng-options="data.maritalStatusId as data.maritalStatusDescription for
+                                 data in EmpCtrl.MaritalStatusList"></select>
+
+                                </td>
+                                <!--<td><input id="txtMaritalStatusDate" type="text" ng-disabled="mySwitch6" value="{{EmpCtrl.EmployeeDetails[0].maritalStatusDate}}" /></td>-->
+                                <td>
+                                    <div class='input-group date'>
+                                        <input ysec-datepiker id="txtMaritalStatusDate" ng-model="fromDate" class="PPP" date-format="dd-MMM-yyyy" placeholder="{{Labelctrl.LabelText.PHDateFormat}}" autocomplete="off"
+                                               past-date-disable="false" upcoming-date-disable="true" ng-disabled="fnmrgdate(mySwitch6)">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </span>
+
+                                    </div>
+                                </td>
+                                <td ng-click="mySwitch6=false">
+                                    <span class="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                    <span class="edit"><i class="fa fa-floppy-o" aria-hidden="true" ng-click="UpdateEmployeeDetails()"></i></span>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                    <table class="table table-bordered table_W tableheader personal-info">
+                        <thead>
+                            <tr>
+                                <th colspan="3">{{Labelctrl.LabelText.LabPreferredNameChange}}</th>
+                            </tr>
+                            <tr>
+                                <th>{{Labelctrl.LabelText.LabPrimaryName}}</th>
+                                <th>{{Labelctrl.LabelText.LabPreferredName}}</th>
+                                <th>{{Labelctrl.LabelText.LabEditSave}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-init="mySwitch9=true">
+                                <td><input id="txtPreferedPName" type="text" ng-disabled="mySwitch9" value="{{EmpCtrl.EmployeeDetails[0].preferedPrimaryName}}" /></td>
+                                <td><input id="txtPreferedName" type="text" ng-disabled="mySwitch9" value="{{EmpCtrl.EmployeeDetails[0].preferedName}}" /></td>
+                                <td ng-click="mySwitch9=false">
+                                    <span class="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                    <span class="edit"><i class="fa fa-floppy-o" aria-hidden="true" ng-click="UpdateEmployeeDetails()"></i></span>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="conatiner_w">
+            <div class="row">
+
+
+                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                    <table class="table table-bordered table_W tableheader personal-info">
+                        <thead>
+                            <tr>
+                                <th colspan="2">{{Labelctrl.LabelText.LabDisability}}</th>
+                            </tr>
+                            <tr>
+                                <th>{{Labelctrl.LabelText.LabDisability}}</th>
+                                <th>{{Labelctrl.LabelText.LabEditSave}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-init="mySwitch12=true">
+                                <!--<td><input id="txtDisable" type="text" value="{{true == EmpCtrl.EmployeeDetails[0].isDisable ? 'Yes' : 'No' }}" ng-disabled="mySwitch12" /></td>-->
+                                <td><input type="checkbox" id="chkIsDisable" ng-checked="EmpCtrl.EmployeeDetails[0].isDisable == true" value="{{EmpCtrl.EmployeeDetails[0].isDisable}}" ng-disabled="mySwitch12" /></td>
+
+                                <td ng-click="mySwitch12=false">
+                                    <span class="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                    <span class="edit"><i class="fa fa-floppy-o" aria-hidden="true" ng-click="UpdateEmployeeDetails()"></i></span>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                    <table class="table table-bordered table_W tableheader personal-info">
+                        <thead>
+                            <tr>
+                                <th colspan="3">{{Labelctrl.LabelText.LabVeteranStatus}}</th>
+                            </tr>
+                            <tr>
+                                <th>{{Labelctrl.LabelText.LabVeteranStatus}}</th>
+                                <th>{{Labelctrl.LabelText.LabSelectDetails}}</th>
+                                <th>{{Labelctrl.LabelText.LabEditSave}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-init="mySwitch13=true">
+                                <!--<td><input id="txtVeteran" type="text" value="{{true == EmpCtrl.EmployeeDetails[0].isVeteran ? 'Yes' : 'No' }}" ng-disabled="mySwitch13" /></td>-->
+                                <td>
+                                    <select id="ddlVeteranYesNo" ng-model="EmpCtrl.isVeteran" ng-disabled="mySwitch13"
+                                            ng-options="data.id as data.type for data in EmpCtrl.VeteranArr1"></select>
+                                </td>
+                                <td>
+                                    <select id="ddlVeteranStatus" ng-if="EmpCtrl.isVeteran==1" ng-model="EmpCtrl.EmployeeDetails[0].isVeteran" ng-disabled="mySwitch13"
+                                            ng-options="data.id as data.type for data in EmpCtrl.VeteranArr"></select>
+                                </td>
+                                <td ng-click="mySwitch13=false">
+                                    <span class="edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                    <span class="edit"><i class="fa fa-floppy-o" aria-hidden="true" ng-click="UpdateEmployeeDetails()"></i></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="conatiner_w">
+            <div class="row">
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <style>
+        .selected {
+            /*background-color: rgba(133, 82, 162, 0.2);*/
+            color: Black;
+            font-weight: bold;
+            /*//   font-size:16px;*/
+        }
+    </style>
+
