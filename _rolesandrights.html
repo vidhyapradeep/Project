@@ -1,0 +1,485 @@
+﻿<div class="container-fluid">
+    <div class="header">
+        <span>Roles & Rights</span>
+    </div>
+
+</div>
+<div ng-controller="RolesAndRightsCtrl as RolesAndRightsctrl">
+    <div class="container_w">
+        <div class="row">
+            <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                <div class="rrt">
+                    <form class="form-inline roles-rights" id="MenuForm" name="MenuForm" method="post" ng-submit="RolesAndRightsctrl.InsertMenu(MenuForm.$valid)" novalidate>
+                       
+                        <!--<div style="margin:-10px 0 10px 100px;">
+                            <span style="color:red;margin-left: 1%;">{{alertAuthForAddSubMenu}}</span>
+                        </div>
+
+                         <div style="margin:0 0 0 100px">
+                            <span style="color:green;">{{alertMessage}}</span>
+                        </div>-->
+
+                        <span class="alert alert-danger" ng-if="alertAuthForAddSubMenu.replace(' ','').length > 0">{{alertAuthForAddSubMenu}}</span>
+
+
+                        <span class="alert alert-success" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+
+                        
+
+                        <div class="form-group">
+                            <label for="filter">Menu Name<span style="margin-right:20px;">*</span></label>
+                            <!--<div class="input-group ">
+                                <input type="text" class="form-control" placeholder="Add Fields">
+                            </div>-->
+                            <div class="input-group ">
+                                <select class="form-control" data-ng-model="ParentMenu" id="ParentMenu" name="ParentMenu" ng-change="RolesAndRightsctrl.ClearAlert()" required>
+                                    <option style="display:none"></option>
+                                    <option ng-repeat="ParentMenuList in  RolesAndRightsctrl.ParentMenuList" value="{{ParentMenuList.menuId}}" ng-selected="ParentMenuList.value == ParentMenu">{{ParentMenuList.menuName}}</option>
+                                </select>
+
+                                <span id="spanMenu" class="help-block" style="color:red;" ng-show="MenuForm.ParentMenu.$error.required" ng-if="MenuForm.$submitted">
+                                    Please Select Menu
+                                </span>
+
+                            </div>
+
+                            <button type="button" class="btn btn-purple" ng-click="vm.addmenusfun()">Add Menu</button>
+                            <div style="display:none;">
+                                <label for="filter">Menu ID</label>
+                                <input type="text" class="form-control" placeholder="MenuId" readonly ng-model="MenuId">
+                            </div>
+                        </div>
+                        <!--</form>
+                        <form class="form-inline roles-rights">-->
+                        <div class="form-group form-inline">
+                            <div>
+                                <label for="filter">SubMenu Name <span>*</span></label>
+                                <div class="input-group ">
+                                    <input type="text" class="form-control" placeholder="Menu Name" ng-model="SubMenuName" name="SubMenu" required>
+
+
+                                </div>
+                                <span id="spanSubMenu" class="help-block" style="color:red;margin-left:17%;margin-top:3px;" ng-show="MenuForm.SubMenu.$error.required" ng-if="MenuForm.$submitted">
+                                    Please Add SubMenu
+                                </span>
+                            </div>                  
+
+                            <div style="margin-left:64%;margin-top:-4%;">
+                                <label for="filter">IsActive<span>*</span></label>
+                                <div class="input-group" style="margin-left:25%;margin-top:-18%;">
+                                    <!--<label class="checkbox-inline"><input type="checkbox" ng-model="IsActive" ng-true-value="'1'" ng-false-value="'0'" ng-checked="true"></label>-->
+                                    <!--<input type="checkbox"  ng-model="IsActive" ng-true-value="'1'" ng-false-value="'0'" ng-checked="true">-->
+                                    <input type="checkbox" ng-model="IsActive" ng-true-value="'1'" ng-false-value="'0'">
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--<div class="form-group">
+                            <label for="filter">Interface Key<span>*</span></label>
+                            <div class="input-group ">
+                                <input type="text" class="form-control" placeholder="Interface Key">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="filter">Panel Key<span>*</span></label>
+                            <div class="input-group ">
+                                <input type="text" class="form-control" placeholder="Panel Key">
+                            </div>
+                        </div>-->
+                        <!--<div class="form-group">
+                            <label for="filter">Activities<span>*</span></label>
+                            <div class="input-group">
+                                <label class="checkbox-inline"><input type="checkbox" value="">Read</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="">Write</label>
+                            </div>
+                        </div>-->
+                        <!--<div class="form-group">
+                            <label for="filter">IsActive<span style="margin-right:35px;">*</span></label>
+                            <div class="input-group">
+                             
+                                <input type="checkbox" ng-model="IsActive" ng-true-value="'1'" ng-false-value="'0'" ng-checked="true">
+                            </div>
+                        </div>-->
+
+                            <div >
+                                <div style="margin:0 0 0 17%;">
+                                    <!--style="margin-left:25%;margin-top:-6%;"    style="margin:-6% 0 0 25%;" -->
+                                    <button type="submit" class="btn btn-purple">Add SubMenu</button>  <!--ng-click="RolesAndRightsctrl.InsertMenu()"-->
+                                    <button type="button" class="btn btn-purple" ng-click="RolesAndRightsctrl.clearMenus()">Clear</button>
+                                </div>
+                            </div>
+
+                       
+                    
+                    </form>
+
+                    <div class="inbox_content mar15" ng-init="RolesAndRightsctrl.GetMenu()">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table_W apply_leave">
+                                <thead>
+                                    <tr>
+                                        <th ng-repeat="a in vm.rolesandRightsinterfaceTH  track by $index">
+                                            <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                            <lable>{{a.th}}</lable>-->
+                                            <lable>{{a}}</lable>
+                                        </th>
+                                        <th style="display:none;">MenuId</th>
+                                        <th style="display:none;">ParentId</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!--<tr ng-repeat="a in vm.rolesandRightsinterfaceTD track by $index">
+                                        <td ng-repeat="b in a.tr track by $index">
+                                            <span ng-if="b.subTd.length==0">{{b.td}}</span>
+                                            <lable>{{b.td}}</lable>
+                                        </td>
+                                        <td><input type="checkbox" value="" /></td>
+                                    </tr>-->
+                                    <tr ng-repeat="item in RolesAndRightsctrl.GetMenuList">
+                                        <td>{{$index+1}}</td>
+
+                                        <td>{{item.menuName}} </td>
+                                        <td><input type="checkbox" ng-checked="item.isActive == true" value="{{item.isActive}}" ng-disabled="true" /></td>
+                                        <td><i class="fa fa-pencil-square-o" aria-hidden="true" style="cursor:pointer;" ng-click="RolesAndRightsctrl.editMenus(item.menuId,item.parentId, item.menuName , item.isActive)"></i></td>
+                                        <td style="display:none;">{{item.menuId}} </td>
+                                        <td style="display:none;">{{item.parentId}} </td>
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                <div class="rrt">
+
+                    <!--<div style="margin:-10px 0 10px 100px;">
+                        <span style="color:red;margin-left: 1%;">{{alertAuthForAddrights}}</span>
+                    </div>-->
+                    <span class="alert alert-danger" ng-if="alertAuthForAddrights.replace(' ','').length > 0">{{alertAuthForAddrights}}</span>
+
+
+                    <span class="alert alert-success" ng-if="alertMessageForRights.replace(' ','').length > 0">{{alertMessageForRights}}</span>
+
+                    <form class="form-inline roles-rights" id="RoleForm" name="RoleForm" method="post" ng-submit="bulkUpdateUsers(RoleForm.$valid)" novalidate>
+
+                        <!--<div style="margin:0 0 0 100px">
+                            <span style="color:green;">{{alertMessageForRights}}</span>
+                        </div>-->
+
+                        <div class="form-group">
+                            <label for="filter">Select Role <span>*</span></label>
+                            <!--<select class="form-control">
+                                <option value="0" selected="">Admin</option>
+                                <option value="1">HR</option>
+                                <option value="2">Admin</option>
+                                <option value="3">HR</option>
+                            </select>-->
+
+                            <select class="form-control" data-ng-model="Role" id="Roles" name="Roles" required   ng-change="RolesAndRightsctrl.SelectRole()" >  <!--ng-click="RolesAndRightsctrl.SelectRole()"-->
+                                <option style="display:none"></option>
+                                <option ng-repeat="item in  RolesAndRightsctrl.RolesList" value="{{item.roleId}}" ng-selected="RolesList.value == Role">{{item.roleName}}</option>
+                            </select>
+
+                            <button type="button" class="btn btn-purple" ng-click="vm.addrolesfun()">Add Roles</button>
+
+
+                        </div>
+                        <span class="help-block" style="color:red;margin-left:18%;margin-top:5px;" ng-show="RoleForm.Roles.$error.required" ng-if="RoleForm.$submitted">
+                            Please Select Role
+                        </span>
+                        <button type="submit" class="btn btn-purple" style="margin-left:88%;">Submit</button>
+                    </form>
+                    <!--<div>
+                        <button class="btn btn-purple" ng-click="vm.addrolesfun()">Add Roles</button>
+                    </div>-->
+
+                    <div class="inbox_content mar15">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table_W apply_leave">
+                                <thead>
+                                    <tr>
+                                        <th ng-repeat="a in vm.assignInterfacesForRolesTableTH  track by $index">
+                                            <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                            <lable>{{a.th}}</lable>-->
+                                            <lable>{{a}}</lable>
+                                        </th>
+                                        <th style="display:none;">MenuId</th>
+                                        <th style="display:none;">ParentId</th>
+                                        <!--<th>Edit/Save</th>-->
+                                    </tr>
+                                </thead>
+                                <!--<tbody>
+                                    <tr ng-repeat="a in vm.assignInterfacesTableTD track by $index">
+                                        <td ng-repeat="b in a.tr track by $index">
+                                            <span ng-if="b.subTd.length==0">{{b.td}}</span>
+                                            <lable>{{b.td}}</lable>
+                                        </td>
+                                        <td><input type="checkbox" value="" /></td>
+                                        <td><input type="checkbox" value="" /></td>
+                                    </tr>
+
+                                </tbody>-->
+                                <!--<tbody>
+                                    <tr ng-repeat="item in RolesAndRightsctrl.RolesList">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.roleId}} </td>
+                                        <td>{{item.roleName}} </td>
+                                        <td><input type="checkbox" ng-checked="item.isActive == true" value="{{item.isActive}}" ng-disabled="true" /></td>
+
+                                </tbody>-->
+                                <tbody>
+                                    <tr ng-repeat="item in RolesAndRightsctrl.MenuList">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.menuName}} </td>
+                                        <!--<td><input type="checkbox" ng-checked="item.isActive == true" value="{{item.isActive}}" ng-disabled="true" /></td>-->
+                                        <td><input type="checkbox" ng-model="item.menuRead" /></td>
+                                        <td><input type="checkbox" ng-model="item.menuWrite" /></td>
+                                        <td style="display:none;">{{item.menuId}} </td>
+                                        <td style="display:none;">{{item.parentId}} </td>
+                                        <!--<td><a href=""    ng-click="SaveUser(Role,item.menuId,Readable,Writable)">Edit</a></td>-->  <!--ng-hide="RolesAndRightsctrl.editMode"-->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--<button class="btn btn-purple"  ng-click="bulkUpdateUsers()">Submit</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fadein internation-training-details" role="dialog" ng-class="{'active':vm.showaddroles==true }">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <button type="button" class="close" ng-click="vm.closeTrainingDetailfn()" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                        <!--<div class="form-group">
+                            <label for="filter" class="control-label">Select Role <span>*</span></label>-->
+                            <!--<select class="form-control">
+                                <option value="0" selected>Admin</option>
+                                <option value="1">Administration</option>
+                                <option value="2">Simple User</option>
+                                <option value="3">HR Admin</option>
+
+                            </select>-->
+                            <!--<div class="input-group ">
+                                <select class="form-control" data-ng-model="Roles" id="Roles" name="Roles" required>
+                                    <option style="display:none"></option>
+                                    <option ng-repeat="item in  RolesAndRightsctrl.RolesList" value="{{item.roleId}}" ng-selected="RolesList.value == Roles">{{item.roleName}}</option>
+                                </select>
+                            </div>-->
+
+                            <!--<div class="input-group ">
+                                <select class="form-control" ng-model="q" id="Roles" name="Roles" required>
+                                    <option style="display:none"></option>
+                                    <option ng-repeat="item in  RolesAndRightsctrl.RolesList | unique : 'roleId'" value="{{item.roleId}}">{{item.roleName}}</option>
+                                </select>
+                            </div>-->
+                        <!--<button class="btn btn-purple mar15">Find</button>-->
+                            <!--<button class="btn btn-purple marrt" ng-click="q = null">Clear</button> 
+                        </div>-->
+                        <div >
+                            <div class="H_search_w">
+                                <div class="containerSearch">
+                                    <i class="fa fa-search" style="margin-right:20%;" ></i>
+                                    <input type="search" id="search" ng-model="q" placeholder="Search..."  style="margin-bottom:5%;margin-right:20%;" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered table_W">
+                            <thead>
+                                <tr>
+                                    <th ng-repeat="a in vm.assignInterfacesTableTH  track by $index">
+                                        <span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                        <lable>{{a.th}}</lable>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in RolesAndRightsctrl.RolesList | filter : q">
+                                    <td>{{$index+1}}</td>
+                                    <td>{{item.roleId}} </td>
+                                    <td>{{item.roleName}} </td>
+                                    <td><input type="checkbox" ng-checked="item.isActive == true" value="{{item.isActive}}" ng-disabled="true" /></td>
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                        <form class="form-inline roles-rights" id="AddRoleForm" name="AddRoleForm" method="post" ng-submit="RolesAndRightsctrl.InsertRoles(AddRoleForm.$valid)" novalidate>
+                          
+                            <!--<div style="margin: -10px 0 -6px -5px;">
+                                <span style="color:red;margin-left: 1%;">{{alertAuthForAddroles}}</span>
+                            </div>
+                            <div style="margin:0 0 0 0">
+                                <span style="color:green;">{{alertMessageForRoles}}</span>
+                            </div>-->
+
+                            <span class="alert alert-danger" ng-if="alertAuthForAddroles.replace(' ','').length > 0">{{alertAuthForAddroles}}</span>
+
+
+                            <span class="alert alert-success" ng-if="alertMessageForRoles.replace(' ','').length > 0">{{alertMessageForRoles}}</span>
+                            
+                              <div class="form-group">
+                                <label class="control-label">Role Name <span>*</span></label>
+                                <div class="input-group ">
+                                    <input type="text" class="form-control" placeholder="" ng-model="RoleName" name="roleName"  ng-change="RolesAndRightsctrl.ClearAlert()" required>
+                                </div>
+                            </div>
+                            <span class="help-block" style="color:red;margin-left:18%;margin-top:5px;" ng-show="AddRoleForm.roleName.$error.required" ng-if="AddRoleForm.$submitted">
+                                Please Add Role
+                            </span>
+
+
+                            <div><label><input type="checkbox" ng-model="Isactive" ng-true-value="'1'" ng-false-value="'0'" checked />IsActive</label> </div>
+
+                            <button type="submit" class="btn btn-purple marrt">Save</button> <!--ng-click="RolesAndRightsctrl.InsertRoles()"-->
+
+                            <button class="btn btn-purple marrt" ng-click="RolesAndRightsctrl.ClearRoles()">Clear</button>
+
+                        </form>
+
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="vm.closeTrainingDetailfn()" class="btn btn-purple" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!--=====================================================-->
+
+
+    <div class="modal fadein internation-training-details" role="dialog" ng-class="{'active':vm.showaddmenus==true }">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <button type="button" class="close" ng-click="vm.closeTrainingDetailfn()" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Details</h4>
+                </div>
+
+                <!--<div style="margin: 8px 0 -16px 112px;">
+                    <span style="color:red;margin-left: 1%;">{{alertAuthForAddMenu}}</span>
+                </div>-->
+
+                <div class="alert-div">
+                    <span class="alert alert-danger" ng-if="alertAuthForAddMenu.replace(' ','').length > 0">{{alertAuthForAddMenu}}</span>
+
+
+                    <span class="alert alert-success" ng-if="alertMessageForPopup.replace(' ','').length > 0">{{alertMessageForPopup}}</span>
+                </div>
+
+
+                <div class="modal-body">
+
+                   
+
+                    <!--<div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">-->
+                    <!--<div class="form-group">
+                        <label for="filter" class="control-label">Select Menu <span>*</span></label>
+                        <div class="input-group ">
+                            <select class="form-control" data-ng-model="ParentMenu" id="ParentMenu" name="ParentMenu" required>
+                                <option style="display:none"></option>
+                                <option ng-repeat="ParentMenuList in  RolesAndRightsctrl.ParentMenuList" value="{{ParentMenuList.menuId}}" ng-selected="ParentMenuList.value == ParentMenu">{{ParentMenuList.menuName}}</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-purple mar15">Find</button>
+                        <button class="btn btn-purple marrt">Clear</button>
+                    </div>-->
+
+                    
+
+                    <div style="display:inline-block; " class="form-inline">
+                        <div >
+                            <form class="form-inline roles-rights" id="AddMenuForm" name="AddMenuForm" method="post" ng-submit="RolesAndRightsctrl.AddMenus(AddMenuForm.$valid)" novalidate>
+                               
+                                <!--<div style="margin:0 0 0 100px">
+                                    <span style="color:green;">{{alertMessageForPopup}}</span>
+                                </div>-->
+                                
+                                 <div class="form-group">
+                                    <label class="control-label">Menu Name <span>*</span></label>
+                                    <div class="input-group ">
+                                        <input type="text" class="form-control" placeholder="" ng-model="ParentMenuName" name="AddMenus" ng-change="RolesAndRightsctrl.ClearAlert()" required>
+                                    </div>
+                                </div>
+                                <span id="spanAddMenu" class="help-block" style="color:red;margin-left:28%;margin-top:2px;" ng-show="AddMenuForm.AddMenus.$error.required" ng-if="AddMenuForm.$submitted">
+                                    Please Add Menu
+                                </span>
+                                <div style="margin-left:28%;">
+                                    <label><input type="checkbox" ng-model="IsactiveForMenu" ng-true-value="'1'" ng-false-value="'0'" checked />IsActive</label>
+                                    <div style="margin-bottom:20px;margin-left:26%;margin-top:-10%;">
+                                        <button type="submit" class="btn btn-purple marrt">Save</button>
+
+                                        <button type="reset" class="btn btn-purple marrt" ng-click="RolesAndRightsctrl.ClearPopupMenus()">Clear</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="inbox_content padd15" style="width:160%;margin-top: 20px;">
+                            <div style="margin-left:40%; margin-bottom: 20px;">
+                                <div class="H_search_w">
+                                    <div class="containerSearch">
+                                        <i class="fa fa-search"></i>
+                                        <input type="search" id="search" ng-model="q" placeholder="Search..." />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered table_W">
+                                <thead>
+                                    <tr>
+                                        <th ng-repeat="a in vm.assignInterfacesForMenuTableTH  track by $index">
+                                            <span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                            <lable>{{a.th}}</lable>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in RolesAndRightsctrl.ParentMenuList | filter : q">
+                                        <td>{{$index+1}}</td>
+
+                                        <td>{{item.menuName}} </td>
+                                        <td><input type="checkbox" ng-checked="item.isActive == true" value="{{item.isActive}}" ng-disabled="true" /></td>
+                                        <td style="display:none;">{{item.menuId}} </td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                      
+                    </div>
+          
+
+
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="vm.closeTrainingDetailfn()" class="btn btn-purple" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
