@@ -1,0 +1,175 @@
+
+<div ng-controller="LabelCtrl as Labelctrl">
+    <div class="container-fluid" ng-controller="ViewTaxCtrl as ViewTaxCtrl">
+        <div class="header">
+            <span>{{Labelctrl.LabelText.HdViewTaxForm}}</span>
+        </div>
+
+        <div class="leave-details mar15 comp_datepicker pull-left" ng-init="ViewTaxCtrl.LoadSalaryPeriods()">
+            <div>
+                <!--<span style="color:red;margin-left:30%;margin-bottom:5%;">{{alertMessage}}</span>-->
+                <span class="alert alert-danger" ng-if="alertMessage.replace(' ','').length > 0">{{alertMessage}}</span>
+            </div>
+            <form class="form-inline" id="TaxForm" name="TaxForm" method="post" ng-submit="ViewTaxCtrl.BtnSubmitClick(TaxForm.$valid)" novalidate>
+                <div class="form-group">
+                    <span class="help-block" style="color: red;" ng-show="TaxForm.SalaryPeriod.$error.required" ng-if="TaxForm.$submitted">Salary Period is Required</span>
+                    <label for="filter">{{Labelctrl.LabelText.LabSelectSalaryPeriod}}<span class="red">*</span></label>
+                    <select class="form-control" ng-model="SelectedPeriod" name="SalaryPeriod" required>
+                        <option value="" selected disabled>Select</option>
+                        <option ng-repeat="item in SalaryPeriods" value="{{item.salaryPeriod}}">{{item.salaryPeriod}}  </option>
+                    </select>
+                    <button class="btn btn-purple" type="submit">Submit</button>
+
+
+                </div>
+            </form>
+        </div>
+
+        <!--Norecords Found Start-->
+        <div ng-show="ViewTaxCtrl.ShowNRImage==true" class="no-record-found">
+            <img src="../../images/NoRecord.png" />
+        </div>
+        <!--Norecords Found End-->
+
+        <div class="container_w" ng-show="ViewTaxCtrl.ShowNRImage==false">
+            <div class="table-responsive" ng-hide="divTip">
+                <table class="table table-bordered table_W tableheader">
+                    <thead>
+                        <tr>
+                            <th colspan="6">{{Labelctrl.LabelText.HdYearEndForm}}</th>
+                        </tr>
+                        <tr>
+                            <th ng-repeat="a in vm.taxFormTableTH  track by $index">
+                                <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                <lable>{{a.th}}</lable>-->
+                                <lable>{{a}}</lable>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in viewTaxDetails">
+                            <td>{{item.assesmentYear}}</td>
+                            <td>{{item.companyName}}</td>
+                            <td>{{item.formId}}</td>
+                            <td>{{item.issedDate}}</td>
+                            <td>{{item.yearEndForm}}</td>
+                            <td><a href="" ng-click="ViewTaxCtrl.btnViewTaxDetailsClick()" style="cursor:pointer;color:#8552a2;">View</a></td>
+                            <!--<td ng-click="vm.btnViewTaxDetailsClick()"><i class="fa fa-pencil-square-o" aria-hidden="true" style="cursor:pointer;"></i></td>-->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--    <div class="modal fadein training-edit-details" role="dialog"   >
+            <div class="modal-dialog" >-->
+            <!--<table class="table table-bordered table_W tableheader">
+                <thead>
+                    <tr>
+                        <th colspan="6">Select Year End Form</th>
+                    </tr>
+                    <tr>
+                        <th>Taxpayer Identification Number(TIN)</th>
+                        <th>Name</th>
+                        <th>Total Income $</th>
+                        <th>Statutory Deduction $</th>
+                        <th>National Insurance Scheme Employee's Contribution $ </th>
+                        <th>Income Tax Deducted $</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in taxReportDetails">
+                        <td>{{item.tinNo}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.totalIncome}}</td>
+                        <td>{{item.statutoryDeduction }}</td>
+                        <td>{{item.nISEmployee}}</td>
+                        <td>{{item.amountTax}}</td>
+                    </tr>
+                </tbody>
+            </table>-->
+            <!--        </div>
+              </div>-->
+            <div class="modal fadein internation-training-details" role="dialog" ng-class="{'active':ShowTaxReportLocal==true }">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="width: 76%;">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" ng-click="ShowTaxReportLocal=false" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">{{Labelctrl.LabelText.HdTaxForm}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="inbox_content padd15">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table_W tableheader">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="6">{{Labelctrl.LabelText.HdYearEndForm}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th ng-repeat="a in vm.taxYearEndFormTableTH  track by $index">                                              
+                                                    <lable>{{a}}</lable>
+                                                </th>
+                                            </tr>
+
+                                            <!--<tr>
+                                                <th>Taxpayer Identification Number(TIN)</th>
+                                                <th>Name</th>
+                                                <th>Total Income $</th>
+                                                <th>Statutory Deduction $</th>                                         
+                                                <th>Income Tax Deducted $</th>
+                                            </tr>-->
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in viewTaxDetails">
+                                                <td>{{item.tinNo}}</td>
+                                                <td>{{item.name}}</td>
+                                                <td class="currency-align">{{item.totalIncome}}</td>
+                                                <!-- <td>{{item.statutoryDeduction }}</td>-->
+
+                                                <td>{{item.nISEmployee}}</td>
+                                                <td class="currency-align">{{item.amountTax}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" ng-click="ShowTaxReportLocal=false" class="btn btn-purple" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!------------Not Available Popup----------->
+
+            <div class="modal fadein training-edit-details" role="dialog" ng-class="{'active':ViewTaxCtrl.ShowNoTaxAvailablePopup}">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="width:60%;">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" ng-click="ViewTaxCtrl.ShowNoTaxAvailablePopup=false;" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><!--<i class="fa fa-warning" ></i>-->  Leave Details</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <div>
+                                    <div>
+                                        <label style="font-size:18px;font-weight:bold;" ng-model="NoViewTax">  <img src="../../images/No-Leave.png" />&nbsp;&nbsp;No History Available </label> <!--{{LeaveApprove}}-->
+                                    </div>
+
+                                </div>
+                            </form>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-purple" ng-click="ViewTaxCtrl.ShowNoTaxAvailablePopup=false;">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!------------------->
+            </div>
+        </div>
+
+
+
+    </div>
