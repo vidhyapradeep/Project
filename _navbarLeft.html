@@ -1,0 +1,38 @@
+﻿<!--===============================-->
+<div class="logo_w" >
+    <div class="logoText"> <img src="../../images/logo.png" /></div>
+    <div class="menu_icon_W" ng-click="main.menuDisableFun()" ng-class="{'active':main.menuDisable}">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div class="admin-details" >
+        <div class="admin-image">
+            <span><i class="fa fa-user-circle-o" aria-hidden="true"></i>{{LoginCtrl.UserName}}</span>
+            <label>{{UserName}} <br /><span> {{roleName}}</span></label>
+        </div>
+    </div>
+</div>
+
+
+<!--===============================-->
+<!--===============================-->
+<div class="leftNaw_W">
+    <div ng-repeat="a in vm.leftMenu">
+        <a toggle-parent-class>
+            <span><i class="fa fa-{{a.menu.replace('&','_').replace(' ','').replace(' ','') | lowercase}}" aria-hidden="true"></i></span><span>{{a.menu}} </span><span ng-if="a.subMenu.length !=0" class="submenuIcon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+        </a>
+
+        <ul class="ul_clear leftMenu_sub" ng-if="a.subMenu.length !=0">
+            <li ng-repeat="b in a.subMenu" ui-sref-active="active" ><a ui-sref="private.{{b.configUrl.replace('&','_').replace(' ','').replace(' ','') | lowercase}}" ng-click="getMenuId(1)"><i class="fa fa-dot-circle-o" aria-hidden="true"></i>{{b.menu}}</a>
+
+
+            </li>
+        </ul>
+    </div>
+
+</div>
+<!--===============================-->
+
+
+
