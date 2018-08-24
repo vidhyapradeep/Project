@@ -1,0 +1,251 @@
+﻿<div class="container-fluid">
+    <div class="header">
+        <span>Approval Status Details</span>
+    </div>
+</div>
+<div ng-controller="ApprovalCtrl as Approvalctrl" >  <!--ng-init="leaveCtrl.GetApprovalLeaveOfEmployee()"-->
+   
+    <section id="tipdetails" class="container_w">
+        <div class="row">
+            <div class="col-xs-12 ">
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+
+                        <a ng-click="vm.TabFun(0)" ng-class="{'active':vm.tabView==0}">Leave Approval Status</a>
+                        <a ng-click="vm.TabFun(1)" ng-class="{'active':vm.tabView==1}">Advance Approval Status</a>
+
+
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+
+                    <div class="tab-pane show in active" ng-show="vm.tabView==0">
+                        <div  class="employee-options mar15" ng-controller="LeaveCtrl as leaveCtrl" ng-init="leaveCtrl.GetApprovalLeaveOfEmployee()">
+
+                            <!--Norecords Found Start-->
+                            <div ng-show="leaveCtrl.ShowNRImage_LvStatus==true" class="no-record-found">
+                                <img src="../../images/NoRecord.png" />
+                            </div>
+                            <!--Norecords Found End-->
+
+                            <div ng-show="leaveCtrl.ShowNRImage_LvStatus==false">
+                                <div class="container_w">
+                                    <!--<div class="leave-details pull-left">
+            <button class="btn btn-purple" ng-click="vm.LeaveApprovalfn()">Apply For Leaves</button>-->
+                                    <!--<span>   <button class="btn btn-purple" ng-click="leaveCtrl.loadGrid()">Load Grid</button> </span>-->
+                                    <!--</div>-->
+                                    <div class="pull-left form-group form-inline">
+                                        <label for="filter" style="font:bold;">Employee ID :</label>
+                                        <span>
+                                            <select class="form-control" ng-model="search">
+                                                <option style="display:none">
+                                                <option ng-repeat="item in  leaveCtrl.EmpList | unique : 'employeeId'" value="{{item.employeeId}}">{{item.employeeId}}</option>
+                                            </select>
+                                        </span>
+                                        <span>
+                                            <button class="btn btn-purple" ng-click="leaveCtrl.Clearsearch()" style="margin-left:10px;">List All Employees</button>
+                                        </span>
+                                    </div>
+
+                                    <div class="pull-right">
+                                        <div class="H_search_w">
+                                            <div class="containerSearch">
+                                                <i class="fa fa-search"></i>
+                                                <input type="search" id="search" ng-model="q" placeholder="Search..." />
+                                            </div>
+                                        </div>
+                                        <div class="show_entries">
+                                            <span>Show Entries</span>
+                                            <span class="dropdown selectBOx_w" style="border:none;">
+                                                <select ng-model="pageSize" id="pageSize" class="form-control" style="border-radius:0px;height:30px;">
+                                                    <option value="5">5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="15">15</option>
+                                                    <option value="20">20</option>
+                                                </select>
+
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="inbox_content padd15">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table_W apply_leave">
+                                            <thead>
+                                                <tr>
+                                                    <th ng-repeat="a in vm.leaveappstatusTableTH  track by $index">
+                                                        <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                <lable>{{a.th}}</lable>-->
+                                                        <lable>{{a}}</lable>
+                                                    </th>
+                                                    <th style="display:none">LeaveId</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!--<tr ng-repeat="item in leaveCtrl.EmpList  | filter : q | startFrom:currentPage*pageSize | limitTo:pageSize">-->
+                                                <tr ng-repeat="item in leaveCtrl.EmpList  | filter : {employeeId:search ,employeeName:q}  |startFrom:currentPage*pageSize | limitTo:pageSize">
+                                                    <td>{{item.employeeId}}</td>
+                                                    <td>{{item.employeeName}}</td>
+                                                    <td>{{item.leaveTypeDesc}}</td>
+                                                    <td>{{item.applyDate}}</td>
+                                                    <td>{{item.fromDate}}</td>
+                                                    <td>{{item.toDate}}</td>
+                                                    <td>{{item.hours}}</td>
+                                                    <td>{{item.days}}</td>
+                                                    <td  style="width:29%">{{item.remark}}</td>
+                                                    <td ng-style="{color: item.approvalStatus=='Approved' ? 'green' : item.approvalStatus=='Cancelled' ? 'red' : 'Orange'}">{{item.approvalStatus}}</td>
+                                                    <td style="display:none">{{item.leaveId}}</td>
+
+
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+
+                                        <ul class="pagination pagination-sm">
+                                            <li><a ng-show="currentPage == 0 ? false : true" ng-click="currentPage=currentPage-1">Prev</a></li>
+                                            <li class="active page_count"><a>{{currentPage+1}}/{{numberOfPages()}}</a></li>
+                                            <li><a ng-show="currentPage >= getData().length/pageSize - 1 ? false : true" ng-click="currentPage=currentPage+1">Next<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+
+
+                    <div class="tab-pane show in active" ng-show="vm.tabView==1">
+                        <div class="employee-options mar15" ng-controller="ApprovalCtrl as Approvalctrl" >  <!--ng-init="Approvalctrl.GetStaffAdvanceApprovalList()"-->
+
+                            <!--Norecords Found Start-->
+                            <div ng-show="Approvalctrl.ShowNRImage_Adv==true" class="no-record-found">
+                                <img src="../../images/NoRecord.png" />
+                            </div>
+                            <!--Norecords Found End-->
+
+                            <div ng-show="Approvalctrl.ShowNRImage_Adv==false">
+                                <div class="container_w">
+                                    <div class="pull-left form-group form-inline">
+                                        <label for="filter" style="font:bold;">Employee ID :</label>
+                                        <span>
+                                            <select class="form-control" ng-model="search">
+                                                <option style="display:none">
+                                                <option ng-repeat="item in Approvalctrl.AllAdvanceApprovalList | unique : 'employeeId'" value="{{item.employeeId}}">{{item.employeeId}}</option>
+                                            </select>
+                                        </span>
+                                        <span>
+                                            <button class="btn btn-purple" ng-click="Approvalctrl.Clearsearch()" style="margin-left:10px;">List All Employees</button>
+                                        </span>
+                                    </div>
+
+                                    <div class="pull-right">
+                                        <div class="H_search_w">
+                                            <div class="containerSearch">
+                                                <i class="fa fa-search"></i>
+                                                <input type="search" id="search" ng-model="s" placeholder="Search..." />
+                                            </div>
+                                        </div>
+                                        <div class="show_entries">
+                                            <span>Show Entries</span>
+                                            <span class="dropdown selectBOx_w" style="border:none;">
+                                                <select ng-model="ApvpageSize" id="pageSize" class="form-control" style="border-radius:0px;height:30px;">
+                                                    <option value="5">5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="15">15</option>
+                                                    <option value="20">20</option>
+                                                </select>
+
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table_W apply_leave">
+                                        <!--tableheader-->
+                                        <thead>
+                                            <tr style="display:none;">
+                                                <th colspan="4">Employee Options</th>
+                                            </tr>
+                                            <tr>
+                                                <th style="display:none">Index</th>
+                                                <th style="display:none">advanceId</th>
+                                                <th style="display:none">contactId</th>
+                                                <th style="display:none">advanceTypeId</th>
+                                                <th style="display:none">currencyId</th>
+                                                <th ng-repeat="a in vm.AdvanceStaffStatusApprovalTableTH  track by $index">
+                                                    <!--<span ng-if="a.subTh.length==0">{{a.th}}</span>
+                                                    <lable>{{a.th}}</lable>-->
+                                                    <lable>{{a}}</lable>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+
+                                            <!--<tr ng-repeat="item in Approvalctrl.AdvanceApprovalList | filter : s | startFrom:ApvcurrentPage*ApvpageSize | limitTo:ApvpageSize ">-->
+                                            <tr ng-repeat="item in Approvalctrl.AdvanceApprovalList | filter : {employeeId : search ,fullName : s} | startFrom:ApvcurrentPage*ApvpageSize | limitTo:ApvpageSize ">
+                                              
+                                                <td style="display:none">{{$index}}</td>
+                                                <td style="display:none">{{item.advanceId}}</td>
+                                                <td style="display:none">{{item.contactId}}</td>
+                                                <td style="display:none">{{item.advanceTypeId}}</td>
+                                                <td style="display:none">{{item.currencyId}}</td>
+                                                <td>{{item.employeeId}}</td>
+                                                <td>{{item.fullName}}</td>
+                                                <td>{{item.description}}</td>
+                                                <td>{{item.currency}}</td>
+                                                <td>{{item.date}}</td>
+                                                <td>{{item.amount}}</td>
+                                                <td style="width:29%">{{item.remark}}</td>
+                                                <td>{{item.paybackCount}}</td>
+                                                <!--<td>{{item.isActive}}</td>-->
+                                                <td ng-style="{color: item.approvalStatus=='Approved' ? 'green' : item.approvalStatus=='Cancelled' ? 'red' : 'Orange'}">{{item.approvalStatus}}</td>
+
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                    <ul class="pagination pagination-sm">
+                                        <li><a ng-show="ApvcurrentPage == 0 ? false : true" ng-click="ApvcurrentPage=ApvcurrentPage-1">Prev</a></li>
+                                        <li class="active page_count"><a>{{ApvcurrentPage+1}}/{{numberOfPages()}}</a></li>
+                                        <li><a ng-show="ApvcurrentPage >= getData().length/ApvpageSize - 1 ? false : true" ng-click="ApvcurrentPage=ApvcurrentPage+1">Next<i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+                                    </ul>
+
+                                </div>
+
+                            </div>
+
+                            </div>
+                            <!-- end-->
+
+  
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        <!--</div>-->
+    </section>
+
+
+
+
+</div>
+
+<style>
+    .modal-body .inbox_content {
+        width: 100%;
+    }
+    .selected {
+        /*background-color: rgba(133, 82, 162, 0.2);*/
+        color: Black;
+        font-weight: bold;
+        /*//   font-size:16px;*/
+    }
+</style>
